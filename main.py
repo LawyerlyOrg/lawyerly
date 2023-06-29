@@ -42,8 +42,6 @@ pinecone.init(
     api_key=os.environ.get("PINECONE_API_KEY"),
     environment="northamerica-northeast1-gcp"
 )
-
-# Initialize Langchain
 index_name = "langchain2"
 
 def load_pdf_data(path):
@@ -52,13 +50,41 @@ def load_pdf_data(path):
     return data
 
 def split_pdf(pdf_data):
-    text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=0)
+    text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=200)
     texts = text_splitter.split_documents(pdf_data)
     return texts
 
 def index_data(texts, embeddings, index_name):
     docsearch = Pinecone.from_texts([t.page_content for t in texts], embeddings, index_name=index_name)
     return docsearch
+
+def process_pdfs(directory):
+    docs = []
+    chunked_docs = []
+
+    # Load all PDF files in directory
+    for pdf_file in os.listdir(directory):
+        f = os.path.join(directory, pdf_file)
+        docs.append(load_pdf_data(f))
+
+    # Chunk PDF text
+    for doc in docs:
+        chunked_docs.append(split_pdf(doc))
+
+    # Create 1D list of concatenated chunks
+    concat_chunks = []
+    for doc in chunked_docs: # Each individual doc is split into chunks
+        for chunk in doc: # Each chunk contains page_content and metadata
+            #print(chunk.page_content)
+            #print('----------------------------------------------')
+            #print(chunk.metadata)
+            #print('\n')
+            #print('\n')
+            concat_chunks.append(chunk)
+
+    # Index text chunks into Pinecone
+    pinecone_index = index_data(concat_chunks, embeddings=embeddings, index_name=index_name)
+    return pinecone_index
 
 def search(query, index):
     docs = index.similarity_search(query)
@@ -67,22 +93,18 @@ def search(query, index):
     return result
 
 def main():
-    # Load PDF data
-    data = load_pdf_data('Cowan-en.pdf')
-    print(f'There are {len(data)} document(s) in your data.')
-    print(f'There are {len(data[0].page_content)} characters in the document.')
-
-    # Split PDF data to chunks of texts
-    texts = split_pdf(data)
-    print (f'PDF is split into {len(texts)} documents.')
-
-    # Index PDF texts into Pinecone
-    pinecone_index = index_data(texts, embeddings=embeddings, index_name=index_name)
+    # Process all PDFs and create Pinecone index
+    pinecone_index = process_pdfs('pdfs')
 
     # Perform sample search
-    query_text = "What was the underlying crime the defendant was accused of assisting?"
-    query_result = search(query_text, pinecone_index)
-    print(query_result)
+    #query_text = "List the titles of the legal cases in bullet point form."
+    query_text = ' '
+
+    while query_text != '':
+        query_text = input("Ask a question: ")
+        query_result = search(query_text, pinecone_index)
+        print(query_result)
 
 if __name__ == "__main__":
     main()
+    
