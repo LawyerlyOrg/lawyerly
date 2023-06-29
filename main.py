@@ -1,22 +1,19 @@
-
+import os
+import ssl
+import nltk
+import pinecone
 from langchain.llms import OpenAI
-from langchain.chains import ConversationChain
-from langchain.chains import LLMChain
+from langchain.chains import ConversationChain, LLMChain
 from langchain.prompts import PromptTemplate
 from langchain.output_parsers import StructuredOutputParser, ResponseSchema
 from langchain.callbacks import get_openai_callback
 from langchain.chains.question_answering import load_qa_chain
-from langchain.agents import load_tools
-from langchain.agents import initialize_agent
+from langchain.agents import load_tools, initialize_agent
 from langchain.document_loaders import UnstructuredPDFLoader, OnlinePDFLoader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain.vectorstores import Chroma, Pinecone
 from langchain.embeddings.openai import OpenAIEmbeddings
 from nltk import word_tokenize,sent_tokenize
-import pinecone
-import nltk
-import ssl
-import os
 
 # API keys
 os.environ["OPENAI_API_KEY"] = "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"
@@ -85,6 +82,7 @@ def main():
     # Perform sample search
     query_text = "What was the underlying crime the defendant was accused of assisting?"
     query_result = search(query_text, pinecone_index)
+    print(query_result)
 
 if __name__ == "__main__":
     main()
