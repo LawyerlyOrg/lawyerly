@@ -2,14 +2,16 @@ import os
 import ssl
 import nltk
 import pinecone
+from PyPDF2 import PdfReader
 from langchain.llms import OpenAI
-from langchain.chains import ConversationChain, LLMChain
+from langchain.chains import ConversationChain, LLMChain, RetrievalQAWithSourcesChain
 from langchain.prompts import PromptTemplate
 from langchain.output_parsers import StructuredOutputParser, ResponseSchema
 from langchain.callbacks import get_openai_callback
 from langchain.chains.question_answering import load_qa_chain
 from langchain.agents import load_tools, initialize_agent
 from langchain.document_loaders import UnstructuredPDFLoader, OnlinePDFLoader
+from langchain.docstore.document import Document
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain.vectorstores import Chroma, Pinecone
 from langchain.embeddings.openai import OpenAIEmbeddings
@@ -29,71 +31,80 @@ else:
     ssl._create_default_https_context = _create_unverified_https_context
 
 try:
-     nltk.data.find('tokenizers/punkt')
+    nltk.data.find('tokenizers/punkt')
 except LookupError:
     nltk.download('punkt')
 
 # Initialize OpenAI props
 embeddings = OpenAIEmbeddings(openai_api_key=os.environ.get('OPENAI_API_KEY'))
-llm = OpenAI(temperature=0.9)
 
 # Initialize Pinecone vector DB
 pinecone.init(
     api_key=os.environ.get("PINECONE_API_KEY"),
     environment="northamerica-northeast1-gcp"
 )
-index_name = "langchain2"
+index_name = "test2"
 
-def load_pdf_data(path):
-    loader = UnstructuredPDFLoader(path)
-    data = loader.load()
-    return data
+def pdf_to_doc(directory):
+    docs = []
 
-def split_pdf(pdf_data):
-    text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=200)
-    texts = text_splitter.split_documents(pdf_data)
-    return texts
+    # Convert each PDF file into LangChain doc
+    for pdf_file in os.listdir(directory):
+        doc = Document(page_content="text", metadata={"source": "local"})
+        doc.page_content = ""
+        pdf_reader = PdfReader(directory+'/'+pdf_file)
+        for page in pdf_reader.pages:
+            doc.page_content += page.extract_text()
+        doc.metadata = pdf_file
+        docs.append(doc)
 
-def index_data(texts, embeddings, index_name):
-    docsearch = Pinecone.from_texts([t.page_content for t in texts], embeddings, index_name=index_name)
-    return docsearch
+    return docs
+
+def docs_to_blocks(docs):
+    text_blocks = []
+    # Split doc text into blocks
+    text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=200, length_function = len)
+    for doc in docs:
+        split_content = text_splitter.split_text(doc.page_content)
+        for content in split_content:
+            new_doc = Document(page_content="text", metadata={"source": "local"})
+            new_doc.page_content = content
+            new_doc.metadata = doc.metadata    
+            text_blocks.append(new_doc)
+
+    return text_blocks
+
+def generate_doc_metadata(text_blocks):
+    meta = []
+    for block in text_blocks:
+        block_dict = {'source': block.metadata}
+        meta.append(block_dict)
+
+    return meta
 
 def process_pdfs(directory):
-    docs = []
-    chunked_docs = []
+ 
+    # Step 1: convert PDF files into langchain docs
+    docs = pdf_to_doc(directory)
 
-    # Load all PDF files in directory
-    for pdf_file in os.listdir(directory):
-        f = os.path.join(directory, pdf_file)
-        docs.append(load_pdf_data(f))
+    # Step 2: split docs into text blocks
+    text_blocks = docs_to_blocks(docs)
 
-    # Chunk PDF text
-    for doc in docs:
-        chunked_docs.append(split_pdf(doc))
+    # Step 3: generate metadata for blocks
+    meta = generate_doc_metadata(text_blocks)
 
-    # Create 1D list of concatenated chunks
-    concat_chunks = []
-    for doc in chunked_docs: # Each individual doc is split into chunks
-        for chunk in doc: # Each chunk contains page_content and metadata
-            #print(chunk.page_content)
-            #print('----------------------------------------------')
-            #print(chunk.metadata)
-            #print('\n')
-            #print('\n')
-            concat_chunks.append(chunk)
+    # Step 4: create Pinecone vector store
+    vectorstore = Pinecone.from_texts([t.page_content for t in text_blocks], embedding=embeddings, metadatas=meta, index_name=index_name)    
 
-    # Index text chunks into Pinecone
-    pinecone_index = index_data(concat_chunks, embeddings=embeddings, index_name=index_name)
-    return pinecone_index
+    return vectorstore
 
 def search(query, index):
-    docs = index.similarity_search(query)
-    chain = load_qa_chain(llm, chain_type="stuff")
-    result = chain.run(input_documents=docs, question=query)
+    chain = RetrievalQAWithSourcesChain.from_chain_type(llm=OpenAI(temperature=0), chain_type="stuff", retriever=index.as_retriever())
+    result = chain({'question': query}, return_only_outputs=True)
     return result
 
 def main():
-    # Process all PDFs and create Pinecone index
+    # Process all PDFs into Pinecone index
     pinecone_index = process_pdfs('pdfs')
 
     # Perform sample search
