@@ -82,7 +82,8 @@ def generate_doc_metadata(text_blocks):
 
     return meta
 
-def process_pdfs(directory):
+# TODO: consider how to incorporate name_spaces into the process PDF portion
+def process_pdfs(directory, name_space=""):
  
     # Step 1: convert PDF files into langchain docs
     docs = pdf_to_doc(directory)
@@ -94,27 +95,63 @@ def process_pdfs(directory):
     meta = generate_doc_metadata(text_blocks)
 
     # Step 4: create Pinecone vector store
-    vectorstore = Pinecone.from_texts([t.page_content for t in text_blocks], embedding=embeddings, metadatas=meta, index_name=index_name)    
+    # this is where the request rate limit is being triggered
+    # TODO: rate limit being hit - consider backoff + batching (batching size increased to 256)
+    vectorstore = Pinecone.from_texts([t.page_content for t in text_blocks], embedding=embeddings, 
+                                      batch_size= 256, metadatas=meta, index_name=index_name, namespace=name_space)
+
+    # vectorstore = Pinecone.from_existing_index(index_name=index_name, embedding=embeddings)
+    # vectorstore.add_texts([t.page_content for t in text_blocks],
+    #                    batch_size=256, metadatas=meta, namespace=name_space)
+       
 
     return vectorstore
 
 def search(query, index):
-    chain = RetrievalQAWithSourcesChain.from_chain_type(llm=OpenAI(temperature=0), chain_type="stuff", retriever=index.as_retriever())
+    chain = RetrievalQAWithSourcesChain.from_chain_type(
+        llm=OpenAI(temperature=0), chain_type="stuff", retriever=index.as_retriever())
     result = chain({'question': query}, return_only_outputs=True)
     return result
 
+def getExistingIndex(name_space=""):
+    pindex = Pinecone.from_existing_index(
+        index_name=index_name, embedding=embeddings, namespace=name_space)
+    return pindex
+
+# TODO: separate querying operation from indexing operation
 def main():
     # Process all PDFs into Pinecone index
-    pinecone_index = process_pdfs('pdfs')
+    #pinecone_index = process_pdfs('pdf_test')
+
+    pinecone_index = []
 
     # Perform sample search
     #query_text = "List the titles of the legal cases in bullet point form."
     query_text = ' '
 
     while query_text != '':
-        query_text = input("Ask a question: ")
-        query_result = search(query_text, pinecone_index)
-        print(query_result)
+        print("Enter a command:\n(1) Process PDFs\n(2) Ask a question\n(3) Exit program\n")
+        query_text = input("Command selected is: ")
+        if (query_text == "1"):
+            print("Processing PDFs.")
+            pinecone_index = process_pdfs('pdf_test', "elmos_world")
+            print("PDFs have been processed")
+            continue
+        if (query_text == "2"):
+            query_text = input("Ask your question: ")
+            pinecone_index = getExistingIndex("elmos_world")
+            query_result = search(query_text, pinecone_index)
+            print(query_result)
+            continue
+        if (query_text == "3"):
+            print("Program is exiting")
+            break
+        else:
+            print("Sorry, that is not a valid choice. Please try again.")
+            continue
+        # query_text = input("Ask a question: ")
+        # query_result = search(query_text, pinecone_index)
+        # print(query_result)
 
 if __name__ == "__main__":
     main()
