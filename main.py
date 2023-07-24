@@ -158,10 +158,10 @@ def main():
             print(query_result)
             continue
         if (query_text == "Quit" or query_text == "quit" or query_text == "3"):
-            print("Program exiting. Bye.")
+            print("Program exiting. Bye.\n")
             break
         else:
-            print("Invalid selection. Please try again.")
+            print("Invalid selection. Please try again.\n")
             continue
         # query_text = input("Ask a question: ")
         # query_result = search(query_text, pinecone_index)
