@@ -130,24 +130,38 @@ def main():
     query_text = ' '
 
     while query_text != '':
-        print("Enter a command:\n(1) Process PDFs\n(2) Ask a question\n(3) Exit program\n")
+        print("Enter a command:\n(1) Process PDFs\n(2) Ask a question\n(3) Quit\n")
         query_text = input("Command selected is: ")
-        if (query_text == "1"):
-            print("Processing PDFs.")
-            pinecone_index = process_pdfs('pdf_test', "elmos_world")
+        if (query_text == "Process PDFs" or query_text == "1"):
+            print("Procedure for Processing PDFs.")
+            pdf_directory = input("Directory for PDFs to be processed is: ")
+            include_name_space = input("Would you like to include a namespace parameter?\n(1) Yes\n(2) No\n")
+            if (include_name_space == "Yes" or include_name_space == "y" or include_name_space == "1"):
+                name_space = input("What is the namespace?: ")
+                print("Processing PDFs.")
+                pinecone_index = process_pdfs(pdf_directory, name_space)
+            else:
+                print("Processing PDFs.")
+                pinecone_index = process_pdfs(pdf_directory)
             print("PDFs have been processed")
             continue
-        if (query_text == "2"):
+        if (query_text == "Ask a question" or query_text == "2"):
             query_text = input("Ask your question: ")
-            pinecone_index = getExistingIndex("elmos_world")
+            # Ask whether wishes to include a namespace?
+            include_name_space = input("Would you like to include a namespace parameter?\n(1) Yes\n(2) No\n")
+            if (include_name_space == "Yes" or include_name_space == "y" or include_name_space == "1"):
+                name_space = input("What is the namespace?: ")
+                pinecone_index = getExistingIndex(name_space)
+            else:
+                pinecone_index = getExistingIndex()
             query_result = search(query_text, pinecone_index)
             print(query_result)
             continue
-        if (query_text == "3"):
-            print("Program is exiting")
+        if (query_text == "Quit" or query_text == "quit" or query_text == "3"):
+            print("Program exiting. Bye.")
             break
         else:
-            print("Sorry, that is not a valid choice. Please try again.")
+            print("Invalid selection. Please try again.")
             continue
         # query_text = input("Ask a question: ")
         # query_result = search(query_text, pinecone_index)
