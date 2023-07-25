@@ -22,17 +22,20 @@ pinecone.init(
 )
 """
 
-def search(query, index_name, embeddings, name_space):
+def search(query, index_name, embeddings, name_space=""):
     index = getExistingIndex(index_name, embeddings, name_space)
     chain = RetrievalQAWithSourcesChain.from_chain_type(
         llm=OpenAI(temperature=0), chain_type="stuff", retriever=index.as_retriever())
     result = chain({'question': query}, return_only_outputs=True)
     return result
 
-def getExistingIndex(index_name, embeddings, name_space):
-    
-    pindex = Pinecone.from_existing_index(
-        index_name=index_name, embedding=embeddings, namespace=name_space)
+def getExistingIndex(index_name, embeddings, name_space=""):
+    if not name_space:
+        pindex = Pinecone.from_existing_index(
+        index_name=index_name, embedding=embeddings)
+    else:
+        pindex = Pinecone.from_existing_index(
+            index_name=index_name, embedding=embeddings, namespace=name_space)
     return pindex
 
 def main():
