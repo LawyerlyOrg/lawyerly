@@ -1,11 +1,13 @@
 # hello Monir, I am a ghostimport os
 from search import *
 from ingest import *
+from dotenv import load_dotenv
 
 # API keys
-os.environ["OPENAI_API_KEY"] = "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"
-os.environ["SERPAPI_API_KEY"] = "4dfd323ac4be946c150a8824d528a68e9b9b7d213dc84415213269fecaea78b4"
-os.environ["PINECONE_API_KEY"] = "0da32401-269e-483a-9e49-482ffd544132"
+load_dotenv()
+OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')
+PINECONE_API_KEY = os.getenv('PINECONE_API_KEY')
+SERPAPI_API_KEY = os.getenv('SERPAPI_API_KEY')
 
 # Initialize OpenAI props
 embeddings = OpenAIEmbeddings(openai_api_key=os.environ.get('OPENAI_API_KEY'))
