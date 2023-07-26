@@ -48,14 +48,15 @@ index_name = "test2"
 embeddings = OpenAIEmbeddings(openai_api_key=os.environ.get('OPENAI_API_KEY'))
 """
 
-def pdf_to_doc(directory):
+def pdfs_to_doc(folder_path):
     docs = []
 
     # Convert each PDF file into LangChain doc
-    for pdf_file in os.listdir(directory):
+    for pdf_file in os.listdir(folder_path):
+        pdf_file_path = folder_path+'/'+pdf_file
         doc = Document(page_content="text", metadata={"source": "local"})
         doc.page_content = ""
-        pdf_reader = PdfReader(directory+'/'+pdf_file)
+        pdf_reader = PdfReader(pdf_file_path)
         for page in pdf_reader.pages:
             doc.page_content += page.extract_text()
         doc.metadata = pdf_file

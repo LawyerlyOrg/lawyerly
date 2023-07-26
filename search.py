@@ -5,7 +5,9 @@ from langchain.chains import RetrievalQAWithSourcesChain
 from langchain.embeddings.openai import OpenAIEmbeddings
 from langchain.vectorstores import Pinecone
 from langchain.llms import OpenAI
-import constants
+
+
+
 
 """
 # API keys
