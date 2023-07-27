@@ -89,7 +89,7 @@ def generate_doc_metadata(text_blocks):
 def process_pdfs(directory, embeddings, index_name, name_space):
  
     # Step 1: convert PDF files into langchain docs
-    docs = pdf_to_doc(directory)
+    docs = pdfs_to_doc(directory)
 
     # Step 2: split docs into text blocks
     text_blocks = docs_to_blocks(docs)
