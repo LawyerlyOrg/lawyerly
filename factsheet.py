@@ -1,28 +1,6 @@
 import openai
 from PyPDF2 import PdfReader
 
-sample_factsheet = """ 
-- Client is Allison. She and her partner are from Canada. 
-- Allison is sexually active with her partner Daniel. 
-- Daniel and Allison have been having sex for 14 months. 
-- Prior to meeting Allison, Daniel discovered he had syphilis. 
-- Daniel did not tell client Allison that he has syphilis, because he thought she would not agree to have sex with him if he did. 
-- Daniel and Allison continued having sexual intercourse. 
-- Allison has recently discovered that she contracted syphilis from Daniel. 
-- Allison would not have continued having sex with Daniel had she known he had syphilis.
-"""
-factsheet = """
-• Client is Allison.  She and her partner are from Canada.  
-• Allison is sexually active with her partner Daniel.  
-• Daniel and Allison have been having sex for 14 months.  
-• Prior to meeting Allison , Daniel discovered he ha d syphilis.  
-• Daniel did not tell client Allison that he has syphilis , because he thought she would not agree to have sex with him if he did.  
-• Daniel and Allison continued having sexual intercourse.  
-• Allison has recently discovered that she contracted syphilis from Daniel.  
-• Allison would not have continued having sex with Daniel had she known he had 
-syphilis. 
-"""
-
 # Step 1: convert fact sheet PDF into string
 def pdf_to_string(pdf_file_path):
     pdf_text = ""
@@ -34,7 +12,7 @@ def pdf_to_string(pdf_file_path):
     factsheet = pdf_text
 
 # Step 2: issue spot and extract search terms
-def issue_spot(factsheet=factsheet):
+def issue_spot(fact_sheet):
 
     prompt = f"""
     Your task is to help a lawyer search for relevant cases in a legal database given a fact sheet about their client.
@@ -45,7 +23,7 @@ def issue_spot(factsheet=factsheet):
 
     Only provide up to the top 6 most relevant search terms.
 
-    Legal fact sheet: ```{factsheet}```
+    Legal fact sheet: ```{fact_sheet}```
     """
 
     messages = [{"role": "user", "content": prompt}]

@@ -100,8 +100,6 @@ def process_pdfs(directory, embeddings, index_name, name_space):
     vectorstore = Pinecone.from_texts([t.page_content for t in text_blocks], embedding=embeddings, 
                                       batch_size= 256, metadatas=meta, index_name=index_name, namespace=name_space)
 
-       
-
     return vectorstore
 
 def main():
