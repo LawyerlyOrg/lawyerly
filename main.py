@@ -26,8 +26,13 @@ pinecone.init(
 )
 index_name = "test2"
 
-def main():
-    sample_fact_sheet = """
+# GLOBAL VARIABLES
+
+case_file_names = ['2012_2RCS_584.pdf', '1990canlii95.pdf', '2017nbca10.pdf', 'Cowan-en.pdf', 'Khill-en.pdf']
+meta_filter = {'source': case_file_names[0]}
+index = get_existing_index(index_name, embeddings, 'criminal_law')
+
+sample_fact_sheet = """
 • Victim is Allison.  She and her partner are from Canada.  
 • Allison is sexually active with her partner the defendant Daniel.  
 • Daniel and Allison have been having sex for 14 months.  
@@ -38,14 +43,21 @@ def main():
 • Allison would not have continued having sex with Daniel had she known he had 
 syphilis. 
 """
-    case_file_names = ['2012_2RCS_584.pdf', '1990canlii95.pdf', '2017nbca10.pdf', 'Cowan-en.pdf', 'Khill-en.pdf']
-    #commands(index_name, embeddings)
-    #print(issue_spot(factsheet))
-    #print(evaluate_relevancy(sample_fact_sheet, index_name, embeddings, name_space='criminal_law'))
-    #print(list_all_embeddings(pinecone_index))
-    meta_filter = {'source': case_file_names[3]}
-    index = get_existing_index(index_name, embeddings, 'criminal_law')
-    print(evaluate_relevancy(sample_fact_sheet, index, meta_filter)['answer'])
+sample_summary = """The defendant is accused of failing to disclose his HIV-positive status to nine complainants before having sex with them, which did not result in any of the complainants contracting HIV. The actus reus of the charged crime is failing to disclose one's HIV-positive status to a sexual partner before having sex with them, and the mens rea is intent to deceive."""
+
+### 
+
+def summarize_and_find_relevancies():
+    # Step 1: summarize case and get string as output
+    summary_string = extract_summary(index, meta_filter)
+    # Step 2: find relevancies between summary and factsheet
+    relevancies = evaluate_relevancy(sample_fact_sheet, summary_string)
+    
+    return relevancies
+
+
+def main():
+    print(summarize_and_find_relevancies())
 
 if __name__ == '__main__':
     main()
