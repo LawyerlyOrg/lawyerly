@@ -1,4 +1,5 @@
-import openai
+import json
+from gpt_search import *
 from PyPDF2 import PdfReader
 
 # Step 1: convert fact sheet PDF into string
@@ -9,10 +10,14 @@ def pdf_to_string(pdf_file_path):
     for page in pdf_reader.pages:
         pdf_text += page.extract_text()
 
-    factsheet = pdf_text
+    fact_sheet = pdf_text
+
+    return fact_sheet
 
 # Step 2: issue spot and extract search terms
-def issue_spot(fact_sheet):
+def issue_spot(pdf_file_path):
+
+    fact_sheet = pdf_to_string(pdf_file_path)
 
     prompt = f"""
     Your task is to help a lawyer search for relevant cases in a legal database given a fact sheet about their client.
@@ -21,17 +26,13 @@ def issue_spot(fact_sheet):
 
     Make sure the search terms are relevant to the fact sheet and are centered on the area of law identified in the fact sheet.
 
-    Only provide up to the top 6 most relevant search terms.
+    Only provide up to the top 6 most relevant search terms in JSON format.
 
     Legal fact sheet: ```{fact_sheet}```
     """
 
-    messages = [{"role": "user", "content": prompt}]
+    response = json.loads(get_completion(prompt))
+    key = list(response.keys())[0]
+    output = response[key]
 
-    response = openai.ChatCompletion.create(
-        model="gpt-3.5-turbo",
-        messages=messages,
-        temperature=0.2,
-    )
-
-    return response.choices[0].message.content
+    return output

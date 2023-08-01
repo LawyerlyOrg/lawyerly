@@ -1,6 +1,6 @@
-from search import *
+from gpt_search import *
 from ingest import *
-from factsheet import *
+from fact_sheet import *
 
 
 def commands(index_name, embeddings):

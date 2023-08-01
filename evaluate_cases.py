@@ -1,13 +1,7 @@
 import openai
-from search import *
-
-prompt_dict = {"criminal":0}
-prompts = []
-
-# including the set of vectors that correspond to each case - 
+from gpt_search import *
 
 def evaluate_relevancy(summary_string, fact_sheet):
-
 
     prompt = f"""
    

@@ -31,21 +31,3 @@ def get_existing_index(index_name, embeddings, name_space=""):
         pindex = Pinecone.from_existing_index(
             index_name=index_name, embedding=embeddings, namespace=name_space)
     return pindex
-
-def main():
-
-    if len(sys.argv) != 3:
-        sys.exit("Usage: program folder namespace")
-
-    print("Query", sys.argv[1])
-    print("Namespace:", sys.argv[2])
-
-    pinecone_index = getExistingIndex(sys.argv[2])
-    print('new index is', pinecone_index)
-    #new index is <langchain.vectorstores.pinecone.Pinecone object at 0x1100cb750>
-    response = search(sys.argv[1], pinecone_index)
-    print(response)
-
-
-if __name__ == '__main__':
-    main()

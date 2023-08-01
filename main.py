@@ -1,6 +1,6 @@
-from search import *
+from gpt_search import *
 from ingest import *
-from factsheet import *
+from fact_sheet import *
 from commands import *
 from evaluate_cases import *
 import constants
@@ -55,9 +55,12 @@ def summarize_and_find_relevancies():
     
     return relevancies
 
+def test_fact_sheet():
+    fact_sheet_path = "fact_sheet/std_fact_pattern.pdf"
+    return issue_spot(fact_sheet_path)
 
 def main():
-    print(summarize_and_find_relevancies())
+    print(test_fact_sheet())
 
 if __name__ == '__main__':
     main()
