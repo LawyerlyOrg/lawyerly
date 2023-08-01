@@ -48,14 +48,15 @@ index_name = "test2"
 embeddings = OpenAIEmbeddings(openai_api_key=os.environ.get('OPENAI_API_KEY'))
 """
 
-def pdf_to_doc(directory):
+def pdfs_to_doc(folder_path):
     docs = []
 
     # Convert each PDF file into LangChain doc
-    for pdf_file in os.listdir(directory):
+    for pdf_file in os.listdir(folder_path):
+        pdf_file_path = folder_path+'/'+pdf_file
         doc = Document(page_content="text", metadata={"source": "local"})
         doc.page_content = ""
-        pdf_reader = PdfReader(directory+'/'+pdf_file)
+        pdf_reader = PdfReader(pdf_file_path)
         for page in pdf_reader.pages:
             doc.page_content += page.extract_text()
         doc.metadata = pdf_file
@@ -88,7 +89,7 @@ def generate_doc_metadata(text_blocks):
 def process_pdfs(directory, embeddings, index_name, name_space):
  
     # Step 1: convert PDF files into langchain docs
-    docs = pdf_to_doc(directory)
+    docs = pdfs_to_doc(directory)
 
     # Step 2: split docs into text blocks
     text_blocks = docs_to_blocks(docs)
@@ -98,8 +99,6 @@ def process_pdfs(directory, embeddings, index_name, name_space):
 
     vectorstore = Pinecone.from_texts([t.page_content for t in text_blocks], embedding=embeddings, 
                                       batch_size= 256, metadatas=meta, index_name=index_name, namespace=name_space)
-
-       
 
     return vectorstore
 
