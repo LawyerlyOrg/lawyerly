@@ -18,36 +18,6 @@ from langchain.vectorstores import Chroma, Pinecone
 from langchain.embeddings.openai import OpenAIEmbeddings
 from nltk import word_tokenize,sent_tokenize
 
-"""
-# API keys
-os.environ["OPENAI_API_KEY"] = "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"
-os.environ["SERPAPI_API_KEY"] = "4dfd323ac4be946c150a8824d528a68e9b9b7d213dc84415213269fecaea78b4"
-os.environ["PINECONE_API_KEY"] = "0da32401-269e-483a-9e49-482ffd544132"
-
-# Initialize NLTK tokenization engine
-try:
-    _create_unverified_https_context = ssl._create_unverified_context
-except AttributeError:
-    pass
-else:
-    ssl._create_default_https_context = _create_unverified_https_context
-
-try:
-    nltk.data.find('tokenizers/punkt')
-except LookupError:
-    nltk.download('punkt')
-
-# Initialize Pinecone vector DB
-pinecone.init(
-    api_key=os.environ.get("PINECONE_API_KEY"),
-    environment="northamerica-northeast1-gcp"
-)
-index_name = "test2"
-
-# Initialize OpenAI props
-embeddings = OpenAIEmbeddings(openai_api_key=os.environ.get('OPENAI_API_KEY'))
-"""
-
 def pdfs_to_doc(folder_path):
     docs = []
 
@@ -84,6 +54,17 @@ def generate_doc_metadata(text_blocks):
         meta.append(block_dict)
 
     return meta
+
+def pdf_to_string(pdf_file_path):
+    pdf_text = ""
+    pdf_reader = PdfReader(pdf_file_path)
+
+    for page in pdf_reader.pages:
+        pdf_text += page.extract_text()
+
+    pdf_string = pdf_text
+
+    return pdf_string
 
 # TODO: consider how to incorporate name_spaces into the process PDF portion
 def process_pdfs(directory, embeddings, index_name, name_space):

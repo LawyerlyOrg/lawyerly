@@ -49,18 +49,15 @@ sample_summary = """The defendant is accused of failing to disclose his HIV-posi
 
 def summarize_and_find_relevancies():
     # Step 1: summarize case and get string as output
-    summary_string = extract_summary(index, meta_filter)
+    summary_string = extract_summary('criminal_law', index, meta_filter)
     # Step 2: find relevancies between summary and factsheet
     relevancies = evaluate_relevancy(sample_fact_sheet, summary_string)
     
     return relevancies
 
-def test_fact_sheet():
-    fact_sheet_path = "fact_sheet/std_fact_pattern.pdf"
-    return issue_spot(fact_sheet_path)
-
 def main():
-    print(test_fact_sheet())
+    print(summarize_and_find_relevancies())
+    #print(test_search_canlii())
 
 if __name__ == '__main__':
     main()
