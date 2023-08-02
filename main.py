@@ -4,6 +4,9 @@ from fact_sheet import *
 from commands import *
 from evaluate_cases import *
 import constants
+import pinecone
+from langchain.embeddings.openai import OpenAIEmbeddings
+
 
 # API keys
 OPENAI_API_KEY = constants.OPENAI_API_KEY
@@ -19,7 +22,7 @@ os.environ["PINECONE_API_KEY"] = constants.PINECONE_API_KEY
 embeddings = OpenAIEmbeddings(openai_api_key=OPENAI_API_KEY)
 openai.api_key = OPENAI_API_KEY
 
-# Initialize Pinecone vector DB
+# Initialize Pinecone index
 pinecone.init(
     api_key=PINECONE_API_KEY,
     environment="northamerica-northeast1-gcp"
@@ -29,8 +32,9 @@ index_name = "test2"
 # GLOBAL VARIABLES
 
 case_file_names = ['2012_2RCS_584.pdf', '1990canlii95.pdf', '2017nbca10.pdf', 'Cowan-en.pdf', 'Khill-en.pdf']
-meta_filter = {'source': case_file_names[0]}
-index = get_existing_index(index_name, embeddings, 'criminal_law')
+collection_name = 'STD Collection'
+law_area = 'criminal_law'
+index = get_existing_index(index_name, embeddings, collection_name)
 
 sample_fact_sheet = """
 • Victim is Allison.  She and her partner are from Canada.  
@@ -49,15 +53,16 @@ sample_summary = """The defendant is accused of failing to disclose his HIV-posi
 
 def summarize_and_find_relevancies():
     # Step 1: summarize case and get string as output
-    summary_string = extract_summary('criminal_law', index, meta_filter)
+    summary_string = extract_summary(law_area, index, case_file_names[0])
     # Step 2: find relevancies between summary and factsheet
     relevancies = evaluate_relevancy(sample_fact_sheet, summary_string)
     
     return relevancies
 
 def main():
-    print(summarize_and_find_relevancies())
-    #print(test_search_canlii())
+    #print(summarize_and_find_relevancies())
+    process_pdfs('pdf_resources/std_test', embeddings, index_name, collection_name, law_area)
+    #print(chat_with_index('Give me a summary of this document', index, case_file_names[0]))
 
 if __name__ == '__main__':
     main()

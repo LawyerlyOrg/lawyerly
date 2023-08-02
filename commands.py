@@ -29,7 +29,7 @@ def commands(index_name, embeddings):
             include_name_space = input("Would you like to identify a namespace argument?\n(1) Yes\n(2) No\n")
             if (include_name_space == "Yes" or include_name_space == "yes" or include_name_space == "y" or include_name_space == "1"):
                 name_space = input("What is the namespace?: ")
-            query_result = search(query_text, index_name, embeddings, name_space)
+            query_result = chat_with_index(query_text, index_name, embeddings, name_space)
             print(query_result)
             continue
         if (query_text == "3"):

@@ -1,11 +1,6 @@
 from gpt_search import *
 import prompts
 
-def extract_summary(law_area, index, meta_filter):
-    query = prompts.prompt_dict[law_area]
-
-    return search(query, index, meta_filter)['answer']
-
 def evaluate_relevancy(summary_string, fact_sheet):
 
     prompt = f"""
@@ -14,4 +9,4 @@ def evaluate_relevancy(summary_string, fact_sheet):
     Factsheet: ```{fact_sheet}```
     """
     
-    return get_completion(prompt)
+    return chat_with_gpt(prompt)
