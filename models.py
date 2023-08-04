@@ -28,5 +28,4 @@ class User(MongoModel):
 	collections = fields.EmbeddedDocumentListField(Collection)	
 
 	class Meta:
-		collection_name = COLLECTION_NAME
-
+		collection_name = 'user'
