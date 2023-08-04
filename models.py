@@ -18,14 +18,14 @@ class Collection(MongoModel):
 	name = fields.CharField(primary_key=True)
 	description = fields.CharField()
 	fact_sheet = fields.CharField()
-	case_summaries = fields.EmbeddedDocumentListField(CaseSummary)
-	chat_files = fields.EmbeddedDocumentListField(ChatFile)
+	case_summary_ids = fields.ListField()
+	chat_file_ids = fields.ListField()
 	
 class User(MongoModel):
 	email = fields.EmailField(primary_key=True)
 	first_name = fields.CharField()
 	last_name = fields.CharField()
-	collections = fields.EmbeddedDocumentListField(Collection)	
+	collection_ids = fields.ListField()
 
 	class Meta:
 		collection_name = 'user'
