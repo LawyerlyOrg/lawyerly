@@ -72,5 +72,8 @@ def main():
     #print(chat_with_index('Give me a summary of this document', index, case_file_names[0]))
     test(client)
 
+    collection_names = get_user_collection_names("gary.smith@gmail.com")
+    print(collection_names)
+    
 if __name__ == '__main__':
     main()

@@ -2,22 +2,22 @@ from pymodm import MongoModel, fields, connect
 from constants import *
 
 # Establish a connection to the database.
-connect(MONGODB_URI)
+connect(DB_URI)
 
 # these are the summaries of the cases the user will upload.
 class CaseSummary(MongoModel):
-	name = fields.CharField(primary_key=True)
+	name = fields.CharField()
 	summary = fields.CharField()
 
 # this is the private data (e.g. contracts, evidence, etc), and legislation that the user may want to query	
 class ChatFile(MongoModel):
-	name = fields.CharField(primary_key=True)
+	name = fields.CharField()
 	
 # these are the different client files a user has active
 class Collection(MongoModel):
-	name = fields.CharField(primary_key=True)
+	name = fields.CharField()
 	description = fields.CharField()
-	fact_sheet = fields.CharField()
+	fact_sheets = fields.ListField()
 	case_summary_ids = fields.ListField()
 	chat_file_ids = fields.ListField()
 	

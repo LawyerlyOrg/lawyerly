@@ -5,6 +5,7 @@ from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain.vectorstores import Pinecone
 import prompts
 from gpt_search import *
+from db import *
 
 def pdfs_to_doc(folder_path):
     docs = []
@@ -60,7 +61,7 @@ def extract_summary(law_area, index_name, file_name):
     return chat_with_index(query, index_name, file_name)['answer']
 
 # TODO: consider how to incorporate name_spaces into the process PDF portion
-def process_pdfs(directory, embeddings, index_name, collection_name, law_area):
+def process_pdfs(directory, embeddings, index_name, collection_name, law_area, user_email):
  
     # Step 1: convert PDF files into langchain docs
     docs = pdfs_to_doc(directory)
@@ -72,6 +73,8 @@ def process_pdfs(directory, embeddings, index_name, collection_name, law_area):
     meta = generate_doc_metadata(text_blocks)
 
     # Step 4: store documents in Pinecone
+    # TODO: ensure success/ failure of Pinecone.from_texts is coordinated with saving summary to db
+    # i.e. both fail or both succeed.
     Pinecone.from_texts([t.page_content for t in text_blocks], embedding=embeddings, 
                                       batch_size= 256, metadatas=meta, index_name=index_name, namespace=collection_name)
 
@@ -84,4 +87,9 @@ def process_pdfs(directory, embeddings, index_name, collection_name, law_area):
         # summarize
         summary = extract_summary(law_area, index, file_name)
         print(f'Summary of {file_name}: {summary}')
-        # store in DB
+        # store in DB\
+
+    # Step 6: call DB operations
+    case_summary_db_operations(user_email, collection_name, file_name, summary, )
+
+
