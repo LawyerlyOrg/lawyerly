@@ -8,6 +8,7 @@ db = client['lawyerly']
 chat_file_col = db['chat_file']
 collection_col = db['collection']
 user_col = db['user']
+case_summary_col = db['case_summary']
 
 pp = pprint.PrettyPrinter(indent=4)
 
@@ -16,10 +17,11 @@ pp = pprint.PrettyPrinter(indent=4)
 def insert_new_case_summary(collection_id, file_name, summary):
     case_summary_object = CaseSummary(file_name, summary).save()
     case_summary_id = get_doc_id(case_summary_object)
+    print("NEW CASE SUMMARY ID", case_summary_id)
     # Each new case summary must be stored in a collection
     add_case_summary_to_collection(collection_id, case_summary_id)
     
-    return case_summary_object
+    return case_summary_id
     
 def insert_new_chat_file(collection_id, file_name):
     chat_file_object = ChatFile(file_name).save()
@@ -27,7 +29,7 @@ def insert_new_chat_file(collection_id, file_name):
     # Each new chat file must be stored in a collection
     add_chat_file_to_collection(collection_id, chat_file_id)
 
-    return chat_file_object
+    return chat_file_id
 
 def insert_new_collection(user_email, name, description, fact_sheets=[], case_summary_ids=[], chat_file_ids=[]):
     collection_object = Collection(name, description, fact_sheets, case_summary_ids, chat_file_ids).save()
@@ -35,27 +37,43 @@ def insert_new_collection(user_email, name, description, fact_sheets=[], case_su
     # Each new collection create muse be stored in a user
     add_collection_to_user(user_email, collection_id)
 
-    return collection_object
+    return collection_id
     
-def insert_new_user(user_email, first_name, last_name, collection_ids=None):
+def insert_new_user(user_email, first_name, last_name, collection_ids=[]):
     user_object = User(user_email, first_name, last_name, collection_ids).save()
-    return user_object
+    user_id = get_doc_id(user_object)
+
+    return user_id
+
+# Getter operations
+
+def get_all_case_summaries(collection_id):
+    collection = collection_col.find({"_id": collection_id})
+    
+    return collection
+
+def get_all_chat_files(collection_id):
+    print("all chat files retrieved")
+
+
+def get_collection(collection_id):
+    # may want results to be a dictionary of document type: document name
+    results = [{'document type': 'document name'}]
+    results.append(get_all_case_summaries(collection_id))
+    results.append(get_all_chat_files(collection_id))
+    return results
 
 # Update operations
 
 def add_collection_to_user(user_email, collection_id):
-    user_col.update_one({'_id': user_email, '$push':{'collection_ids':collection_id}})
-    print("collection added")
+    user_col.update_one({'_id': user_email}, {'$push':{'collection_ids':collection_id}})
     
 # this is a more explicit version of update_collection
 def add_case_summary_to_collection(collection_id, case_summary_id):
-    collection_col.update_one({'_id': collection_id, '$push':{'case_summary_ids':case_summary_id}})    
-    print("case_summary added to collection")
+    collection_col.update_one({'_id': collection_id}, {'$push':{'case_summary_ids':case_summary_id}})    
 
 def add_chat_file_to_collection(collection_id, chat_file_id):
-    collection_col.update_one({'_id': collection_id, '$push':{'chat_file_ids':chat_file_id}})    
-    print("chat_file added to collection")
-
+    collection_col.update_one({'_id': collection_id}, {'$push':{'chat_file_ids':chat_file_id}})    
 
 # Remove operations
 
@@ -113,7 +131,7 @@ def get_user_collection_names(user_email):
     
     return output
 
-def test(client):
+def not_test(client):
     
     sample_fact_sheet = """
 • Victim is Allison.  She and her partner are from Canada.  

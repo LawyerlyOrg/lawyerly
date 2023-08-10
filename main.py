@@ -31,7 +31,7 @@ pinecone.init(
     api_key=PINECONE_API_KEY,
     environment="northamerica-northeast1-gcp"
 )
-index_name = "test2"
+index_name = "test3"
 
 # Initialize MongoDB
 client = MongoClient(MONGODB_URI, tlsCAFile=certifi.where())
@@ -66,14 +66,9 @@ def summarize_and_find_relevancies():
     
     return relevancies
 
-def main():
-    #print(summarize_and_find_relevancies())
-    #process_pdfs('pdf_resources/std_test', embeddings, index_name, collection_name, law_area)
-    #print(chat_with_index('Give me a summary of this document', index, case_file_names[0]))
-    test(client)
 
-    collection_names = get_user_collection_names("gary.smith@gmail.com")
-    print(collection_names)
+def main():
+    return 0
     
 if __name__ == '__main__':
     main()

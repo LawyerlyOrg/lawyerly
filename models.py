@@ -17,15 +17,15 @@ class ChatFile(MongoModel):
 class Collection(MongoModel):
 	name = fields.CharField()
 	description = fields.CharField()
-	fact_sheets = fields.ListField()
-	case_summary_ids = fields.ListField()
-	chat_file_ids = fields.ListField()
+	fact_sheets = fields.ListField(blank=True)
+	case_summary_ids = fields.ListField(blank=True)
+	chat_file_ids = fields.ListField(blank=True)
 	
 class User(MongoModel):
 	email = fields.EmailField(primary_key=True)
 	first_name = fields.CharField()
 	last_name = fields.CharField()
-	collection_ids = fields.ListField()
+	collection_ids = fields.ListField(blank=True)
 
 	class Meta:
 		collection_name = 'user'
