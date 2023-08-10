@@ -9,12 +9,6 @@ from db import *
 from langchain.embeddings.openai import OpenAIEmbeddings
 from bson.objectid import ObjectId
 
-# API keys
-OPENAI_API_KEY = constants.OPENAI_API_KEY
-PINECONE_API_KEY = constants.PINECONE_API_KEY
-SERPAPI_API_KEY = constants.SERPAPI_API_KEY
-MONGODB_URI = constants.MONGODB_URI
-
 # Store API keys in OS env
 os.environ["OPENAI_API_KEY"] = constants.OPENAI_API_KEY
 os.environ["SERPAPI_API_KEY"] = constants.SERPAPI_API_KEY
@@ -28,7 +22,7 @@ def directory():
     
 @pytest.fixture
 def embeddings():
-    embeddings = OpenAIEmbeddings(openai_api_key=OPENAI_API_KEY)
+    embeddings = OpenAIEmbeddings(openai_api_key=os.environ["OPENAI_API_KEY"])
     return embeddings
 
 @pytest.fixture
