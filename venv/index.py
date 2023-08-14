@@ -10,8 +10,6 @@ import openai
 import pinecone
 from langchain.embeddings.openai import OpenAIEmbeddings
 from pymongo import MongoClient
-import certifi
-
 
 app = Flask(__name__)
 

@@ -9,12 +9,6 @@ from db import *
 from langchain.embeddings.openai import OpenAIEmbeddings
 from bson.objectid import ObjectId
 
-# Store API keys in OS env
-os.environ["OPENAI_API_KEY"] = constants.OPENAI_API_KEY
-os.environ["SERPAPI_API_KEY"] = constants.SERPAPI_API_KEY
-os.environ["PINECONE_API_KEY"] = constants.PINECONE_API_KEY
-os.environ["MONGODB_URI"] = constants.MONGODB_URI
-
 @pytest.fixture
 def directory():
     directory = 'pdf_resources\pdf_archive'

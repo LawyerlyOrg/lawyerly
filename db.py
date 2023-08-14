@@ -1,4 +1,5 @@
 import pymongo
+import os
 #from constants import *
 from models import User, CaseSummary, ChatFile, Collection
 
