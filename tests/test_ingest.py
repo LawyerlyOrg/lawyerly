@@ -9,12 +9,6 @@ from db import *
 from langchain.embeddings.openai import OpenAIEmbeddings
 from bson.objectid import ObjectId
 
-# Store API keys in OS env
-os.environ["OPENAI_API_KEY"] = constants.OPENAI_API_KEY
-os.environ["SERPAPI_API_KEY"] = constants.SERPAPI_API_KEY
-os.environ["PINECONE_API_KEY"] = constants.PINECONE_API_KEY
-os.environ["MONGODB_URI"] = constants.MONGODB_URI
-
 @pytest.fixture
 def directory():
     directory = 'pdf_resources\pdf_archive'
@@ -54,7 +48,7 @@ def test_process_pdfs(directory, embeddings, index_name, collection_dict, law_ar
     collection_id = insert_new_collection(user_email, collection_name, collection_description)
 
     pinecone.init(
-        api_key=PINECONE_API_KEY,
+        api_key=os.environ["PINECONE_API_KEY"],
         environment="northamerica-northeast1-gcp"
     )
 
@@ -76,12 +70,3 @@ def test_process_pdfs(directory, embeddings, index_name, collection_dict, law_ar
     difference = summary_count_after - summary_count_before
 
     assert difference == file_count
-
-"""
- The defendant is accused of using force against another person. The actions and circumstances of the defendant 
- in the Document are that the accused could have done something to prevent the final confrontation, but failed to do so. 
- The effect of the defendant's actions on the victim in the Document is that the victim was injured. 
- The actus reus of the charged crime is the use of force against another person. The mens rea of the charged crime is I do not know.
-
-
-"""

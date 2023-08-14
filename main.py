@@ -4,7 +4,7 @@ from fact_sheet import *
 from commands import *
 from evaluate_cases import *
 from db import *
-import constants
+# import constants
 import pinecone
 from langchain.embeddings.openai import OpenAIEmbeddings
 import certifi
