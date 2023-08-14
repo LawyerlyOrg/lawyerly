@@ -1,8 +1,9 @@
 from pymodm import MongoModel, fields, connect
-from constants import *
+import os
+# from constants import *
 
 # Establish a connection to the database.
-connect(DB_URI)
+connect(os.environ["DB_URI"])
 
 # these are the summaries of the cases the user will upload.
 class CaseSummary(MongoModel):

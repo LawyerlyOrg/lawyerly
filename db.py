@@ -1,16 +1,13 @@
 import pymongo
-import pprint
-from constants import *
+#from constants import *
 from models import User, CaseSummary, ChatFile, Collection
 
-client = pymongo.MongoClient(MONGODB_URI)
+client = pymongo.MongoClient(os.environ["MONGODB_URI"])
 db = client['lawyerly']
 chat_file_col = db['chat_file']
 collection_col = db['collection']
 user_col = db['user']
 case_summary_col = db['case_summary']
-
-pp = pprint.PrettyPrinter(indent=4)
 
 # Insert Operations
 
