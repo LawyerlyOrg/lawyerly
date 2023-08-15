@@ -13,7 +13,6 @@ from pymongo import MongoClient
 
 app = Flask(__name__)
 
-
 with app.app_context():
         #embeddings = OpenAIEmbeddings(openai_api_key=os.environ["OPENAI_API_KEY"])
         openai.api_key = os.environ["OPENAI_API_KEY"]
@@ -24,7 +23,6 @@ with app.app_context():
 
 @app.route('/chat_with_gpt')
 def chat():
-    # Store API keys in OS env
     # http://10.1.1.1:5000/chat_with_gpt?prompt=what is the meaning of life?
     prompt= request.args.get('prompt')
     print('prompt', prompt)
@@ -35,24 +33,14 @@ def chat():
 def home():
     return 'Home Page Route'
 
-
 @app.route('/about')
 def about():
     return 'About Page Route'
-
 
 @app.route('/portfolio')
 def portfolio():
     return 'Portfolio Page Route'
 
-
 @app.route('/contact')
 def contact():
     return 'Contact Page Route'
-
-
-@app.route('/api')
-def api():
-    with open('data.json', mode='r') as my_file:
-        text = my_file.read()
-        return text
