@@ -6,3 +6,4 @@ pymongo
 pymodm
 PyPDF2
 pytest
+tiktoken
