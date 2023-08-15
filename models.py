@@ -1,6 +1,5 @@
 from pymodm import MongoModel, fields, connect
 import os
-# from constants import *
 
 # Establish a connection to the database.
 connect(os.environ["DB_URI"])

@@ -4,10 +4,8 @@ from fact_sheet import *
 from commands import *
 from evaluate_cases import *
 from db import *
-# import constants
 import pinecone
 from langchain.embeddings.openai import OpenAIEmbeddings
-import certifi
 from pymongo import MongoClient
 
 # Store API keys in OS env
@@ -26,9 +24,6 @@ pinecone.init(
     environment="northamerica-northeast1-gcp"
 )
 index_name = "test3"
-
-# Initialize MongoDB
-client = MongoClient(MONGODB_URI, tlsCAFile=certifi.where())
 
 # GLOBAL VARIABLES
 

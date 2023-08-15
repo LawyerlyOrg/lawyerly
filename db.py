@@ -1,6 +1,5 @@
 import pymongo
 import os
-#from constants import *
 from models import User, CaseSummary, ChatFile, Collection
 
 client = pymongo.MongoClient(os.environ["MONGODB_URI"])
