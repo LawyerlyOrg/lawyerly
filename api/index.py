@@ -54,11 +54,7 @@ def create_collection(user_id):
 
   
     # return a success message and the collection id and status code 201
-    return {'message': 'Collection created successfully', 'id': collection.id}, status.HTTP_201_CREATED
-
-@app.route('/collections/create_collection/<string:user_email>')
-def create_collection():
-    print("create collection")
+    return {'message': 'Collection created successfully'}, 201
 
 @app.route('/upload_factsheet/<string:user_email>')
 def upload_factsheet():
