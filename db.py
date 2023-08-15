@@ -115,7 +115,7 @@ def get_doc_id(mongo_document):
     
     return doc_id
 
-def get_user_collection_names(user_email):
+def get_user_collections(user_email):
     output = {}
 
     user_object = user_col.find_one({'_id':user_email})
