@@ -1,6 +1,7 @@
 import pymongo
 import os
 from models import User, CaseSummary, ChatFile, Collection
+from bson.objectid import ObjectId
 
 client = pymongo.MongoClient(os.environ["MONGODB_URI"])
 db = client['lawyerly']
@@ -115,16 +116,23 @@ def get_doc_id(mongo_document):
     
     return doc_id
 
+def get_user(user_email):
+    user_object = user_col.find_one({'_id':user_email})
+
+    return user_object
+
 def get_user_collections(user_email):
     output = {}
+    
+    user_object = get_user(user_email)
+    user_id = user_object['_id']
 
-    user_object = user_col.find_one({'_id':user_email})
     collection_ids = user_object['collection_ids']
 
     collection_cursor = collection_col.find({'_id':{'$in':collection_ids}})
 
     for line in collection_cursor:
-        output[line['_id']] = line['name']
+        output[str(line['_id'])] = line['name']
     
     return output
 

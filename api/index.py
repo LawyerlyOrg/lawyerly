@@ -42,17 +42,18 @@ def chat():
     text = chat_with_gpt(prompt)
     return text
 
-@app.route('/users/<user_id>/collections', methods=['GET'])
-def get_collections(user_id):
+@app.route('/users/<string:user_email>/collections', methods=['GET'])
+def get_collections(user_email):
+
     # query the database for the collections that belong to the user
-    data = get_user_collections(user_email=user_id)
+    data = get_user_collections(user_email=user_email)
+    print(f'data:{data}')
     # return a JSON response with the data and status code 200
     return jsonify(data), 200
 
 @app.route('/users/<user_id>/collections', methods=['POST'])
 def create_collection(user_id):
 
-  
     # return a success message and the collection id and status code 201
     return {'message': 'Collection created successfully'}, 201
 
@@ -81,3 +82,6 @@ def portfolio():
 @app.route('/contact')
 def contact():
     return 'Contact Page Route'
+
+if __name__ == '__main__':
+   app.run()
