@@ -2,7 +2,7 @@ Flask==2.3.2
 langchain==0.0.264
 openai==0.27.8
 pinecone_client==2.2.2
-pymodm==0.4.3
 pymongo==4.4.1
+pymodm==0.4.3
 PyPDF2==3.0.1
 pytest==7.4.0
