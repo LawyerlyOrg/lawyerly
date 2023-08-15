@@ -13,18 +13,15 @@ from pymongo import MongoClient
 
 app = Flask(__name__)
 
+"""
 with app.app_context():
-        os.environ["OPENAI_API_KEY"] = constants.OPENAI_API_KEY
-        os.environ["SERPAPI_API_KEY"] = constants.SERPAPI_API_KEY
-        os.environ["PINECONE_API_KEY"] = constants.PINECONE_API_KEY
-        os.environ["MONGODB_URI"] = constants.MONGODB_URI
-
         embeddings = OpenAIEmbeddings(openai_api_key=os.environ["OPENAI_API_KEY"])
         openai.api_key = os.environ["OPENAI_API_KEY"]
         pinecone.init(
         api_key=os.environ["PINECONE_API_KEY"],
         environment="northamerica-northeast1-gcp"
         )
+"""
 
 @app.route('/chat_with_gpt')
 def chat():

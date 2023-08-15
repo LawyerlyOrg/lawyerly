@@ -1,7 +1,7 @@
 Flask
 langchain
 openai
-pinecone_client
+pinecone-client
 pymongo
 pymodm
 PyPDF2
