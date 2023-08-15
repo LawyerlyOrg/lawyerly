@@ -1,6 +1,8 @@
 name: PyTest
 on: push
 
+
+
 jobs:
   test:
 
@@ -20,3 +22,8 @@ jobs:
       run: |
         pip install pytest pytest-cov
         pytest tests --doctest-modules --junitxml=junit/test-results.xml --cov=com --cov-report=xml --cov-report=html
+      env:
+        OPENAI_API_KEY: ${{secrets.OPENAI_API_KEY}}
+        PINECONE_API_KEY: ${{secrets.PINECONE_API_KEY}}
+        MONGODB_URI: ${{secrets.MONGODB_URI}}
+        DB_URI: ${{secrets.DB_URI}}
