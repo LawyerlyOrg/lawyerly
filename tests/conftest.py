@@ -2,6 +2,7 @@ import os
 import openai
 import pinecone
 from langchain.embeddings.openai import OpenAIEmbeddings
+#import constants
 
 def pytest_configure(config):
     #os.environ["OPENAI_API_KEY"] = constants.OPENAI_API_KEY
