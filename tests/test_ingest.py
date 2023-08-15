@@ -10,7 +10,7 @@ from bson.objectid import ObjectId
 
 @pytest.fixture
 def directory():
-    directory = 'pdf_resources\pdf_archive'
+    directory = 'pdf_resources' + '\\' + 'pdf_archive'
     return directory
     
 @pytest.fixture
