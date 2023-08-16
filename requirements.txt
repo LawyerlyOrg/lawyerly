@@ -7,3 +7,4 @@ pymodm
 PyPDF2
 pytest
 tiktoken
+flask_restx
