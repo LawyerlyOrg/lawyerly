@@ -12,12 +12,16 @@ class CaseSummary(MongoModel):
 # this is the private data (e.g. contracts, evidence, etc), and legislation that the user may want to query	
 class ChatFile(MongoModel):
 	name = fields.CharField()
+
+class FactSheet(MongoModel):
+	name = fields.CharField()
+	facts = fields.CharField()
 	
 # these are the different client files a user has active
 class Collection(MongoModel):
 	name = fields.CharField()
 	description = fields.CharField()
-	fact_sheets = fields.ListField(blank=True)
+	fact_sheet_ids = fields.ListField(blank=True)
 	case_summary_ids = fields.ListField(blank=True)
 	chat_file_ids = fields.ListField(blank=True)
 	

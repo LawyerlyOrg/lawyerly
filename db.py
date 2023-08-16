@@ -1,6 +1,6 @@
 import pymongo
 import os
-from models import User, CaseSummary, ChatFile, Collection
+from models import User, CaseSummary, ChatFile, Collection, FactSheet
 from bson.objectid import ObjectId
 
 client = pymongo.MongoClient(os.environ["MONGODB_URI"])
@@ -9,13 +9,21 @@ chat_file_col = db['chat_file']
 collection_col = db['collection']
 user_col = db['user']
 case_summary_col = db['case_summary']
+fact_sheet_col = db['fact_sheet']
 
 # Insert Operations
+
+def insert_new_fact_sheet(collection_id, file_name, facts):
+    fact_sheet_object = FactSheet(file_name, facts).save()
+    fact_sheet_id = get_doc_id(fact_sheet_object)
+    # Each new fact sheet must be stored in a collection
+    add_fact_sheet_to_collection(collection_id, fact_sheet_id)
+
+    return fact_sheet_id
 
 def insert_new_case_summary(collection_id, file_name, summary):
     case_summary_object = CaseSummary(file_name, summary).save()
     case_summary_id = get_doc_id(case_summary_object)
-    print("NEW CASE SUMMARY ID", case_summary_id)
     # Each new case summary must be stored in a collection
     add_case_summary_to_collection(collection_id, case_summary_id)
     
@@ -61,10 +69,13 @@ def get_collection(collection_id):
     results.append(get_all_chat_files(collection_id))
     return results
 
-# Update operations
+# Update operations (PRIVATE FUNCTIONS)
 
 def add_collection_to_user(user_email, collection_id):
     user_col.update_one({'_id': user_email}, {'$push':{'collection_ids':collection_id}})
+
+def add_fact_sheet_to_collection(collection_id, fact_sheet_id):
+    collection_col.update_one({'_id': collection_id}, {'$push':{'fact_sheet_ids': fact_sheet_id}})
     
 # this is a more explicit version of update_collection
 def add_case_summary_to_collection(collection_id, case_summary_id):

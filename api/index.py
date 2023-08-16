@@ -13,6 +13,7 @@ from pymongo import MongoClient
 from db import get_user_collections, insert_new_collection
 
 app = Flask(__name__)
+app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
 
 with app.app_context():
         #embeddings = OpenAIEmbeddings(openai_api_key=os.environ["OPENAI_API_KEY"])
@@ -43,7 +44,20 @@ def chat():
     text = chat_with_gpt(prompt)
     return text
 
-@app.route('/users/<string:user_email>/collections', methods=['GET'])
+@app.route('/collection/<string:collection_id>/factsheet', methods=['POST'])
+def create_factsheet():
+    if "file" not in request.files:
+        return "No file part", 400
+    file = request.files["file"]
+    if file.filename == "":
+        return "No selected file", 400
+    if file and file.filename.endswith(".pdf"):
+        # do something with the PDF file, such as saving it or processing it
+        return "File uploaded successfully", 200
+    else:
+        return "Invalid file type", 400
+
+@app.route('/user/<string:user_email>/collections', methods=['GET'])
 def get_collections(user_email):
 
     # query the database for the collections that belong to the user
@@ -52,7 +66,7 @@ def get_collections(user_email):
     # return a JSON response with the data and status code 200
     return jsonify(data), 200
 
-@app.route('/users/<string:user_email>/collections', methods=['POST'])
+@app.route('/user/<string:user_email>/collections', methods=['POST'])
 def create_collection(user_email):
     # http://10.1.1.1:5000/users/user_email/collections?name=Haji's Case
 
@@ -75,10 +89,6 @@ def create_collection(user_email):
 
     # return a success message and the collection id and status code 201
     return {'message': 'Collection created successfully'}, 201
-
-@app.route('/upload_factsheet/<string:user_email>')
-def upload_factsheet():
-    print("upload factsheet")
 
 @app.route('/upload_case_files/<string:user_email>')
 def upload_casefile():
