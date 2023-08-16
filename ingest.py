@@ -1,5 +1,5 @@
 import os
-from PyPDF2 import PdfReader
+from pypdf import PdfReader, PdfFileReader
 from langchain.docstore.document import Document
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain.vectorstores import Pinecone
@@ -44,9 +44,9 @@ def generate_doc_metadata(text_blocks):
 
     return meta
 
-def pdf_to_string(pdf_file_path):
+def pdf_to_string(pdf):
     pdf_text = ""
-    pdf_reader = PdfReader(pdf_file_path)
+    pdf_reader = PdfReader(pdf)
 
     for page in pdf_reader.pages:
         pdf_text += page.extract_text()

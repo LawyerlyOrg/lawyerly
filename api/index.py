@@ -1,16 +1,20 @@
 import sys
 import os.path
 import os
+from io import BytesIO
 sys.path.append(
     os.path.abspath(os.path.join(os.path.dirname(__file__), os.path.pardir)))
 from flask import Flask, request, jsonify
 from flask_restx import Api, Resource, reqparse
 from gpt_search import chat_with_gpt
+from pypdf.errors import PdfReadError
 import openai
 import pinecone
 from langchain.embeddings.openai import OpenAIEmbeddings
 from pymongo import MongoClient
-from db import get_user_collections, insert_new_collection
+from db import get_user_collections, insert_new_collection, insert_new_fact_sheet
+from ingest import pdf_to_string
+from bson.objectid import ObjectId
 
 app = Flask(__name__)
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
@@ -45,17 +49,34 @@ def chat():
     return text
 
 @app.route('/collection/<string:collection_id>/factsheet', methods=['POST'])
-def create_factsheet():
-    if "file" not in request.files:
-        return "No file part", 400
-    file = request.files["file"]
-    if file.filename == "":
-        return "No selected file", 400
-    if file and file.filename.endswith(".pdf"):
-        # do something with the PDF file, such as saving it or processing it
-        return "File uploaded successfully", 200
-    else:
-        return "Invalid file type", 400
+def create_factsheet(collection_id):
+
+    print('request files:', request.files)
+
+    pdf_files = {} # filename: string
+
+    # check that upload is not empty
+    if len(request.files) == 0:
+        return "No files uploaded", 400
+
+    for key in request.files:
+        try:
+            current_file = request.files.get(key)
+            filename = current_file.filename
+            file = current_file.read()
+            stream = BytesIO(file)
+            string = pdf_to_string(stream)
+        except PdfReadError:
+            return "Invalid file type", 400
+        else:
+            pdf_files[filename] = string
+            
+    # create fact sheet(s)
+    # TODO: bulk insert to mongodb should be implemented
+    for file_name, fact_string in pdf_files.items():
+        insert_new_fact_sheet(ObjectId(collection_id), file_name, fact_string)
+
+    return f"Fact sheet(s) created successfully", 200
 
 @app.route('/user/<string:user_email>/collections', methods=['GET'])
 def get_collections(user_email):
