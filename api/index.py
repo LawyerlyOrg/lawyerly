@@ -185,5 +185,5 @@ def contact():
 
 if __name__ == '__main__':
    
-    handle_certificates()
+    #handle_certificates()
     app.run()
