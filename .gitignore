@@ -1,3 +1,4 @@
 constants.py
 __pycache__/
 .vercel
+api/install_certificates.py
