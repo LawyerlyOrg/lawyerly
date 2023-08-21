@@ -67,7 +67,14 @@ def get_collection(collection_id):
     results = [{'document type': 'document name'}]
     results.append(get_all_case_summaries(collection_id))
     results.append(get_all_chat_files(collection_id))
+
     return results
+
+def get_collection_name(collection_id):
+    collection_obj = collection_col.find_one({"_id": collection_id})
+    collection_name = collection_obj['name']
+    
+    return collection_name
 
 # Update operations (PRIVATE FUNCTIONS)
 
