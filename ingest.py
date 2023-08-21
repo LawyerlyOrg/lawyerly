@@ -63,22 +63,28 @@ def extract_summary(law_area, index_name, file_name):
 # TODO: consider how to incorporate name_spaces into the process PDF portion
 def process_pdfs(directory, embeddings, index_name, collection_name, collection_id, law_area):
  
+
     # Step 1: convert PDF files into langchain docs
     docs = pdfs_to_doc(directory)
+    #print(f'Step 1: docs = {docs}')
 
     # Step 2: split docs into text blocks
     text_blocks = docs_to_blocks(docs)
+    #print(f'Step 2: text_blocks = {text_blocks}')
 
     # Step 3: generate metadata for blocks
     meta = generate_doc_metadata(text_blocks)
+    #print(f'Step 3: meta = {meta}')
 
     # Step 4: store documents in Pinecone
 
     Pinecone.from_texts([t.page_content for t in text_blocks], embedding=embeddings, 
                                       batch_size= 256, metadatas=meta, index_name=index_name, namespace=collection_name)
+    #print('Step 4: text blocks stored in pinecone')
 
     # Step 5: generate and store case summaries for each PDF file
     index = get_existing_index(index_name, embeddings, collection_name)
+    #print(f'Step 5: index = {index}')
 
     for doc in docs:
         file_name = doc.metadata
