@@ -17,7 +17,7 @@ from db import get_user_collections, insert_new_collection, insert_new_fact_shee
 from ingest import pdf_to_string, process_pdfs
 from bson.objectid import ObjectId
 from bson.errors import InvalidId
-from install_certificates import handle_certificates
+#from install_certificates import handle_certificates
 import shutil
 
 
