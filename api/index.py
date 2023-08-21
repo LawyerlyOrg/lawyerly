@@ -51,8 +51,6 @@ def chat():
 @app.route('/collection/<string:collection_id>/factsheet', methods=['POST'])
 def create_factsheet(collection_id):
 
-    print('request files:', request.files)
-
     pdf_files = {} # filename: string
 
     # check that upload is not empty
@@ -71,12 +69,12 @@ def create_factsheet(collection_id):
         else:
             pdf_files[filename] = string
             
-    # create fact sheet(s)
+    # Create fact sheet(s)
     # TODO: bulk insert to mongodb should be implemented
     for file_name, fact_string in pdf_files.items():
         insert_new_fact_sheet(ObjectId(collection_id), file_name, fact_string)
 
-    return f"Fact sheet(s) created successfully", 200
+    return "Fact sheet(s) created successfully", 200
 
 @app.route('/user/<string:user_email>/collections', methods=['GET'])
 def get_collections(user_email):
