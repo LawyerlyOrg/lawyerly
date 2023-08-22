@@ -52,29 +52,25 @@ def insert_new_user(user_email, first_name, last_name, collection_ids=[]):
     return user_id
 
 # Getter operations
+def get_case_summary(case_summary_id):
+    case_summary = case_summary_col.find_one({"_id": case_summary_id})
+    return case_summary
 
-def get_all_case_summaries(collection_id):
-    collection = collection_col.find({"_id": collection_id})
+def get_case_summary_ids(collection_id):
+    collection_obj = collection_col.find_one({"_id": collection_id})
+    case_summary_ids = collection_obj['case_summary_ids']
     
-    return collection
-
-def get_all_chat_files(collection_id):
-    print("all chat files retrieved")
-
-
-def get_collection(collection_id):
-    # may want results to be a dictionary of document type: document name
-    results = [{'document type': 'document name'}]
-    results.append(get_all_case_summaries(collection_id))
-    results.append(get_all_chat_files(collection_id))
-
-    return results
+    return case_summary_ids
 
 def get_collection_name(collection_id):
     collection_obj = collection_col.find_one({"_id": collection_id})
     collection_name = collection_obj['name']
     
     return collection_name
+
+def get_fact_sheet(fact_sheet_id):
+    fact_sheet = fact_sheet_col.find_one({"_id":fact_sheet_id})
+    return fact_sheet
 
 # Update operations (PRIVATE FUNCTIONS)
 

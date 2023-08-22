@@ -66,7 +66,7 @@ def pdf_to_string(pdf):
     pdf_reader = PdfReader(pdf)
 
     for page in pdf_reader.pages:
-        pdf_text += page.extract_text()
+        pdf_text += ' ' + page.extract_text()
 
     pdf_string = pdf_text
 

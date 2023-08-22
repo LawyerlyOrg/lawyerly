@@ -14,6 +14,7 @@ import pinecone
 from langchain.embeddings.openai import OpenAIEmbeddings
 from pymongo import MongoClient
 from db import get_user_collections, insert_new_collection, insert_new_fact_sheet, get_collection_name
+from evaluate_cases import evaluate_relevancy_for_summaries_in_collection
 from ingest import pdf_to_string, process_pdfs
 from bson.objectid import ObjectId
 from bson.errors import InvalidId
@@ -152,7 +153,23 @@ def ingest_case_files(collection_id):
 
         return {'message': 'Case file(s) summarized successfully'}, 201
 
-@app.route('/upload_relevancy/<string:user_email>/<string:collection_id>/<string:case_id>')
+@app.route('/relevancies',  methods=['GET'])
+def relevancies(): #/relevancies?collection_id=00000000000000&fact_sheet_id=0101010101001
+    # create a parser object
+    # args = request.args.to_dict()
+    parser = reqparse.RequestParser()
+    # add name and description arguments
+    parser.add_argument("collection_id", required=True, type=int, help="Collection id cannot be blank!")
+    parser.add_argument("fact_sheet_id", required=True, type=int, help="Fact sheet id cannot be blank!")
+    # parse the arguments from the request
+    args = parser.parse_args()
+
+    collection_id = args["collection_id"]
+    fact_sheet_id = args["fact_sheet_id"]
+    
+    relevancies = evaluate_relevancy_for_summaries_in_collection(ObjectId(collection_id), ObjectId(fact_sheet_id))
+    print('Case file(s) evaluated for relevancy against fact sheet successfully!')
+    return jsonify(relevancies), 200
 
 @app.route('/')
 def home():

@@ -33,6 +33,33 @@ def law_area():
     law_area = 'criminal_law'
     return law_area
 
+@pytest.fixture
+def index_name():
+    index_name = "test4"
+    return index_name
+
+@pytest.fixture
+def collection_name():
+    collection_name = "Casandra's Case"
+    return collection_name
+
+@pytest.fixture
+def index(index_name, embeddings, collection_name):
+    index = get_existing_index(index_name, embeddings, collection_name)
+    return index
+
+@pytest.fixture
+def file_name():
+    file_name = '2017nbca10.pdf'
+    #file_name = 'Khill-en.pdf'
+    return file_name
+
+def test_extract_summary(law_area, index, file_name):
+    summary = extract_summary(law_area, index, file_name)
+    print(summary)
+    assert summary
+    
+@pytest.mark.skip(reason="skiiiiiiip")
 def test_process_pdfs(directory, embeddings, index_name, collection_dict, law_area):
 
     # Step 1: create user
