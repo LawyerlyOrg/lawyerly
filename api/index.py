@@ -147,6 +147,7 @@ def ingest_case_files(collection_id):
             except PdfReadError:
                 return "Invalid file type", 400
             
+        # process step
         process_pdfs(request.files, embeddings, index_name, collection_name, ObjectId(collection_id), law_area, api_mode=True)
 
         return {'message': 'Case file(s) summarized successfully'}, 201
