@@ -7,6 +7,23 @@ import prompts
 from gpt_search import *
 from db import *
 
+def request_pdfs_to_doc(request_files):
+    # request.files = {key:file}
+    docs = []
+    for key in request_files:
+        doc = Document(page_content="text", metadata={"source": "local"})
+        doc.page_content = ""
+        file = request_files.get(key)
+        filename = file.filename
+        #print(f'creating doc for {filename}')
+        pdf_reader = PdfReader(file)
+        for page in pdf_reader.pages:
+            doc.page_content += page.extract_text()
+        doc.metadata = filename
+        docs.append(doc)
+
+    return docs
+
 def pdfs_to_doc(folder_path):
     docs = []
 
@@ -61,11 +78,13 @@ def extract_summary(law_area, index_name, file_name):
     return chat_with_index(query, index_name, file_name)['answer']
 
 # TODO: consider how to incorporate name_spaces into the process PDF portion
-def process_pdfs(directory, embeddings, index_name, collection_name, collection_id, law_area):
+def process_pdfs(pdfs, embeddings, index_name, collection_name, collection_id, law_area, api_mode = False):
  
-
     # Step 1: convert PDF files into langchain docs
-    docs = pdfs_to_doc(directory)
+    if api_mode:
+        docs = request_pdfs_to_doc(pdfs)
+    else:
+        docs = pdfs_to_doc(pdfs)
     #print(f'Step 1: docs = {docs}')
 
     # Step 2: split docs into text blocks

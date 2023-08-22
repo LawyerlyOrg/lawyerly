@@ -23,7 +23,6 @@ import shutil
 
 app = Flask(__name__)
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
-app.config['UPLOAD_FOLDER'] = 'static/case_pdfs'
 
 with app.app_context():
         embeddings = OpenAIEmbeddings(openai_api_key=os.environ["OPENAI_API_KEY"])
@@ -135,33 +134,20 @@ def ingest_case_files(collection_id):
         # parse the arguments from the request
         args = parser.parse_args()
         law_area = args["law_area"]
-        
-        # create temp folder for ingest operations
-        upload_folder = app.config['UPLOAD_FOLDER'] + '/' + collection_id
-        if os.path.isdir(upload_folder):
-            shutil.rmtree(upload_folder)
-        os.makedirs(upload_folder) 
 
         # check that upload is not empty
         if len(request.files) == 0:
             return "No files uploaded", 400
 
+        # check that all files are valid PDF
         for key in request.files:
             try:
                 current_file = request.files.get(key)
-                filename = current_file.filename
-
-                 # copy request files into local directory
-                current_file.save(upload_folder + '/' + filename)
-
-                # check that all files are valid PDF
                 PdfReader(current_file)
-            except IOError:
-                return f"Could not save file: {filename}", 400
             except PdfReadError:
                 return "Invalid file type", 400
             
-        process_pdfs(upload_folder, embeddings, index_name, collection_name, ObjectId(collection_id), law_area)
+        process_pdfs(request.files, embeddings, index_name, collection_name, ObjectId(collection_id), law_area, api_mode=True)
 
         return {'message': 'Case file(s) summarized successfully'}, 201
 
