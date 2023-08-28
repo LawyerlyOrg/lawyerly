@@ -59,8 +59,10 @@ def get_case_summary(case_summary_id):
 def get_case_summary_ids(collection_id):
     collection_obj = collection_col.find_one({"_id": collection_id})
     case_summary_ids = collection_obj['case_summary_ids']
+
+    output = [str(i) for i in case_summary_ids]
     
-    return case_summary_ids
+    return output
 
 def get_collection_name(collection_id):
     collection_obj = collection_col.find_one({"_id": collection_id})
@@ -72,6 +74,29 @@ def get_fact_sheet(fact_sheet_id):
     fact_sheet = fact_sheet_col.find_one({"_id":fact_sheet_id})
     return fact_sheet
 
+def get_user_collections(user_email):
+    output = {}
+    
+    user_object = get_user(user_email)
+    user_id = user_object['_id']
+
+    collection_ids = user_object['collection_ids']
+
+    collection_cursor = collection_col.find({'_id':{'$in':collection_ids}})
+
+    for line in collection_cursor:
+        output[str(line['_id'])] = line['name']
+    
+    return output
+
+def get_fact_sheets(collection_id):
+    collection_obj = collection_col.find_one({"_id": collection_id})
+    fact_sheet_ids = collection_obj['fact_sheet_ids']
+
+    output = [str(i) for i in fact_sheet_ids]
+
+    return output
+    
 # Update operations (PRIVATE FUNCTIONS)
 
 def add_collection_to_user(user_email, collection_id):
@@ -135,20 +160,6 @@ def get_user(user_email):
 
     return user_object
 
-def get_user_collections(user_email):
-    output = {}
-    
-    user_object = get_user(user_email)
-    user_id = user_object['_id']
-
-    collection_ids = user_object['collection_ids']
-
-    collection_cursor = collection_col.find({'_id':{'$in':collection_ids}})
-
-    for line in collection_cursor:
-        output[str(line['_id'])] = line['name']
-    
-    return output
 
 def not_test(client):
     

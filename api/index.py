@@ -13,7 +13,7 @@ import openai
 import pinecone
 from langchain.embeddings.openai import OpenAIEmbeddings
 from pymongo import MongoClient
-from db import get_user_collections, insert_new_collection, insert_new_fact_sheet, get_collection_name
+from db import get_user_collections, insert_new_collection, insert_new_fact_sheet, get_collection_name, get_fact_sheets, get_case_summary_ids
 from evaluate_cases import evaluate_relevancy_for_summaries_in_collection
 from ingest import pdf_to_string, process_pdfs
 from bson.objectid import ObjectId
@@ -55,33 +55,39 @@ def chat():
     text = chat_with_gpt(prompt)
     return text
 
-@app.route('/collection/<string:collection_id>/factsheet', methods=['POST'])
-def create_factsheet(collection_id):
+@app.route('/collection/<string:collection_id>/factsheets', methods=['POST', 'GET'])
+def factsheets(collection_id):
 
-    pdf_files = {} # filename: string
+    if request.method == "POST":
+        pdf_files = {} # filename: string
+        ids = []
 
-    # check that upload is not empty
-    if len(request.files) == 0:
-        return "No files uploaded", 400
+        # check that upload is not empty
+        if len(request.files) == 0:
+            return "No files uploaded", 400
 
-    for key in request.files:
-        try:
-            current_file = request.files.get(key)
-            filename = current_file.filename
-            file = current_file.read()
-            stream = BytesIO(file)
-            string = pdf_to_string(stream)
-        except PdfReadError:
-            return "Invalid file type", 400
-        else:
-            pdf_files[filename] = string
-            
-    # Create fact sheet(s)
-    # TODO: bulk insert to mongodb should be implemented
-    for file_name, fact_string in pdf_files.items():
-        insert_new_fact_sheet(ObjectId(collection_id), file_name, fact_string)
+        for key in request.files:
+            try:
+                current_file = request.files.get(key)
+                filename = current_file.filename
+                file = current_file.read()
+                stream = BytesIO(file)
+                string = pdf_to_string(stream)
+            except PdfReadError:
+                return "Invalid file type", 400
+            else:
+                pdf_files[filename] = string
 
-    return "Fact sheet(s) created successfully", 200
+        # Create fact sheet(s)
+        # TODO: bulk insert to mongodb should be implemented
+        for file_name, fact_string in pdf_files.items():
+            ids.append(str(insert_new_fact_sheet(ObjectId(collection_id), file_name, fact_string)))
+
+        return jsonify(ids), 201
+    
+    if request.method == "GET":
+        fact_sheet_ids = get_fact_sheets(ObjectId(collection_id))
+        return fact_sheet_ids, 200
 
 @app.route('/user/<string:user_email>/collections', methods=['GET'])
 def get_collections(user_email):
@@ -117,7 +123,7 @@ def create_collection(user_email):
     return {'message': 'Collection created successfully'}, 201
 
 @app.route('/collection/<string:collection_id>/cases',  methods=['POST', 'GET'])
-def ingest_case_files(collection_id):
+def cases(collection_id):
     
     if request.method == "POST":
 
@@ -152,6 +158,10 @@ def ingest_case_files(collection_id):
         process_pdfs(request.files, embeddings, index_name, collection_name, ObjectId(collection_id), law_area, api_mode=True)
 
         return {'message': 'Case file(s) summarized successfully'}, 201
+
+    if request.method == 'GET':
+        case_summary_ids = get_case_summary_ids(ObjectId(collection_id))
+        return case_summary_ids, 200
 
 @app.route('/relevancies',  methods=['GET'])
 def relevancies(): #/relevancies?collection_id=00000000000000&fact_sheet_id=0101010101001
