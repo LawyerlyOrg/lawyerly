@@ -159,8 +159,8 @@ def relevancies(): #/relevancies?collection_id=00000000000000&fact_sheet_id=0101
     # args = request.args.to_dict()
     parser = reqparse.RequestParser()
     # add name and description arguments
-    parser.add_argument("collection_id", required=True, type=int, help="Collection id cannot be blank!")
-    parser.add_argument("fact_sheet_id", required=True, type=int, help="Fact sheet id cannot be blank!")
+    parser.add_argument("collection_id", required=True, type=str, help="Collection id cannot be blank!")
+    parser.add_argument("fact_sheet_id", required=True, type=str, help="Fact sheet id cannot be blank!")
     # parse the arguments from the request
     args = parser.parse_args()
 
@@ -168,7 +168,8 @@ def relevancies(): #/relevancies?collection_id=00000000000000&fact_sheet_id=0101
     fact_sheet_id = args["fact_sheet_id"]
     
     relevancies = evaluate_relevancy_for_summaries_in_collection(ObjectId(collection_id), ObjectId(fact_sheet_id))
-    print('Case file(s) evaluated for relevancy against fact sheet successfully!')
+    #print('Case file(s) evaluated for relevancy against fact sheet successfully!')
+    #print(relevancies, type(relevancies))
     return jsonify(relevancies), 200
 
 @app.route('/')

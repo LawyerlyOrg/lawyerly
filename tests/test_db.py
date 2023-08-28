@@ -112,7 +112,7 @@ def test_insert_multiple_case_summaries_one_collection(file_name, sample_summary
 
     assert case_summary_2_id in case_summary_ids
 
-@pytest.mark.skip(reason="skiiiiiiip")
+#@pytest.mark.skip(reason="skiiiiiiip")
 def test_db_insert_operations(file_name, sample_summary):
     user_email = "gary.smith@gmail.com"
     first_name = "Gary"
