@@ -94,7 +94,7 @@ def get_collections(user_email):
 
     # query the database for the collections that belong to the user
     data = get_user_collections(user_email=user_email)
-    print(f'data:{data}')
+    #print(f'data:{data}')
     # return a JSON response with the data and status code 200
     return jsonify(data), 200
 

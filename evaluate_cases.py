@@ -19,7 +19,7 @@ def evaluate_relevancy_for_summaries_in_collection(collection_id, fact_sheet_id)
     summaries = get_case_summary_ids(collection_id)
     fact_sheet = get_fact_sheet(fact_sheet_id)
     for summary_id in summaries:
-        summary_string = get_case_summary(summary_id)["summary"]
+        summary_string = get_case_summary(ObjectId(summary_id))["summary"]
         relevancies[str(summary_id)] = evaluate_relevancy(summary_string, fact_sheet)
     
     return relevancies
