@@ -31,7 +31,7 @@ with app.app_context():
 
 # TODO: in the future, make a chat function, whereby user can query their private data.
 
-@app.route('/collection/<string:collection_id>/factsheets', methods=['POST', 'GET'])
+@app.route('/api/collection/<string:collection_id>/factsheets', methods=['POST', 'GET'])
 def factsheets(collection_id):
 
     if request.method == "POST":
@@ -64,7 +64,7 @@ def factsheets(collection_id):
         fact_sheet_ids = get_fact_sheets(ObjectId(collection_id))
         return fact_sheet_ids, 200
 
-@app.route('/user/<string:user_email>/collections', methods=['POST', 'GET'])
+@app.route('/api/user/<string:user_email>/collections', methods=['POST', 'GET'])
 def collections(user_email):
 
     if request.method == 'GET':
@@ -91,7 +91,7 @@ def collections(user_email):
     
         return collection_id, 201
 
-@app.route('/collection/<string:collection_id>/cases',  methods=['POST', 'GET'])
+@app.route('/api/collection/<string:collection_id>/cases',  methods=['POST', 'GET'])
 def cases(collection_id):
     
     if request.method == "POST":
@@ -128,7 +128,7 @@ def cases(collection_id):
         case_summary_ids = get_case_summary_ids(ObjectId(collection_id))
         return case_summary_ids, 200
 
-@app.route('/relevancies',  methods=['GET'])
+@app.route('/api/relevancies',  methods=['GET'])
 def relevancies(): 
 
     parser = reqparse.RequestParser()
@@ -143,7 +143,7 @@ def relevancies():
 
     return jsonify(relevancies), 200
 
-@app.route('/')
+@app.route('/api')
 def home():
     return 'Home Page Route'
 
