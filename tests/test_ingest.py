@@ -10,7 +10,7 @@ from bson.objectid import ObjectId
 
 @pytest.fixture
 def directory():
-    directory = "pdf_resources/pdf_archive"
+    directory = "assets/pdf_resources/pdf_archive"
     return directory
     
 @pytest.fixture
@@ -59,7 +59,7 @@ def test_extract_summary(law_area, index, file_name):
     print(summary)
     assert summary
     
-@pytest.mark.skip(reason="skiiiiiiip")
+#@pytest.mark.skip(reason="skiiiiiiip")
 def test_process_pdfs(directory, embeddings, index_name, collection_dict, law_area):
 
     # Step 1: create user

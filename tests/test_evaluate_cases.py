@@ -11,7 +11,7 @@ from evaluate_cases import evaluate_relevancy_for_summaries_in_collection
 
 @pytest.fixture
 def directory():
-    directory = "pdf_resources/std_test"
+    directory = "assets/pdf_resources/std_test"
     return directory
     
 @pytest.fixture
@@ -31,7 +31,7 @@ def law_area():
 
 @pytest.fixture
 def fact_sheet_file_path():
-    fact_sheet_file_path = 'fact_sheet/std_fact_pattern.pdf'
+    fact_sheet_file_path = 'assets/fact_sheet/std_fact_pattern.pdf'
     return fact_sheet_file_path
 
 @pytest.fixture
@@ -67,5 +67,5 @@ def test_evaluate_relevancy_for_summaries_in_collection(directory, embeddings, i
 
     # Step 5: evaluate relevancies
     relevancy = evaluate_relevancy_for_summaries_in_collection(collection_id, fact_sheet_id)
-    print(relevancy)
+    
     assert len(relevancy) == len(os.listdir(directory))

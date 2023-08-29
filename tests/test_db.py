@@ -2,7 +2,6 @@ import os
 import sys
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 import pytest
-import pymongo
 from db import *
 
 @pytest.fixture
@@ -15,7 +14,7 @@ def sample_summary():
     sample_summary = """The defendant is accused of failing to disclose his HIV-positive status to nine complainants before having sex with them, which did not result in any of the complainants contracting HIV. The actus reus of the charged crime is failing to disclose one's HIV-positive status to a sexual partner before having sex with them, and the mens rea is intent to deceive."""
     return sample_summary
 
-@pytest.mark.skip(reason="skiiiiiiip")
+#@pytest.mark.skip(reason="skiiiiiiip")
 def test_insert_multiple_collections_one_user():
     user_email = "gary.smith@gmail.com"
     first_name = "Gary"
@@ -45,7 +44,7 @@ def test_insert_multiple_collections_one_user():
 
     assert collection_2_id in collection_ids
 
-@pytest.mark.skip(reason="skiiiiiiip")
+#@pytest.mark.skip(reason="skiiiiiiip")
 def test_insert_multiple_fact_sheets_one_collection():
     user_email = "ghaz666@gmail.com"
     first_name = "Ghazanfar"
@@ -79,7 +78,7 @@ def test_insert_multiple_fact_sheets_one_collection():
     
     assert fact_sheet_2_id in fact_sheet_ids
 
-@pytest.mark.skip(reason="skiiiiiiip")
+#@pytest.mark.skip(reason="skiiiiiiip")
 def test_insert_multiple_case_summaries_one_collection(file_name, sample_summary):
     user_email = "mohsen@gmail.com"
     first_name = "Mohsen"
@@ -141,12 +140,4 @@ def test_db_insert_operations(file_name, sample_summary):
     case_summary_ids = collection_object['case_summary_ids']
 
     assert case_summary_id in case_summary_ids
-
-@pytest.mark.skip(reason="skiiiiiiip")
-def test_get_collection_name():
-    collection_id = '64dd36dc3cb105f0f0ef2602'
-    expected_collection_name = "Frank's Case"
-    received_collection_name = get_collection_name(ObjectId(collection_id))
-
-    assert expected_collection_name == received_collection_name
 
