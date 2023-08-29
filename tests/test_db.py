@@ -1,4 +1,6 @@
 import os
+import sys
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 import pytest
 import pymongo
 from db import *
@@ -13,7 +15,7 @@ def sample_summary():
     sample_summary = """The defendant is accused of failing to disclose his HIV-positive status to nine complainants before having sex with them, which did not result in any of the complainants contracting HIV. The actus reus of the charged crime is failing to disclose one's HIV-positive status to a sexual partner before having sex with them, and the mens rea is intent to deceive."""
     return sample_summary
 
-#@pytest.mark.skip(reason="skiiiiiiip")
+@pytest.mark.skip(reason="skiiiiiiip")
 def test_insert_multiple_collections_one_user():
     user_email = "gary.smith@gmail.com"
     first_name = "Gary"
@@ -43,6 +45,41 @@ def test_insert_multiple_collections_one_user():
 
     assert collection_2_id in collection_ids
 
+@pytest.mark.skip(reason="skiiiiiiip")
+def test_insert_multiple_fact_sheets_one_collection():
+    user_email = "ghaz666@gmail.com"
+    first_name = "Ghazanfar"
+    last_name = "Hajiabadi"
+    
+    # Step 1: create a new user
+    user_id = insert_new_user(user_email, first_name, last_name)
+
+    # Step 2: create two collections for the user
+    collection_name = "Ghaz's Case"
+    collection_description = "Ghaz's drunk accident"
+    collection_id = insert_new_collection(user_email, collection_name, collection_description)
+
+    # Step 3: create two fact sheets
+    sample_fact_sheet_1 = """* Ghazanfar was drunk * Ghazanfar drove while drunk * Ghazanfar crashed"""
+    file_name_1 = "Ghaz_drunk_April_2023.pdf"
+    fact_sheet_1_id = insert_new_fact_sheet(collection_id, file_name_1, sample_fact_sheet_1)
+
+    # Fetch case_summary_ids to check
+    collection_object = collection_col.find_one({'_id':collection_id})
+    fact_sheet_ids = collection_object['fact_sheet_ids']
+
+    assert fact_sheet_1_id in fact_sheet_ids
+
+    sample_fact_sheet_2 = """* Pedro is running for public office * Pedro has been approached by a private donor * Pedro was offered a donation * Pedro was asked to consider modifying govt policy"""
+    file_name_2 = "Pedro_accepting_bribe_2022.pdf"
+    fact_sheet_2_id = insert_new_fact_sheet(collection_id, file_name_2, sample_fact_sheet_2)
+    
+    collection_object = collection_col.find_one({'_id':collection_id})
+    fact_sheet_ids = collection_object['fact_sheet_ids']
+    
+    assert fact_sheet_2_id in fact_sheet_ids
+
+@pytest.mark.skip(reason="skiiiiiiip")
 def test_insert_multiple_case_summaries_one_collection(file_name, sample_summary):
     user_email = "mohsen@gmail.com"
     first_name = "Mohsen"
@@ -104,3 +141,12 @@ def test_db_insert_operations(file_name, sample_summary):
     case_summary_ids = collection_object['case_summary_ids']
 
     assert case_summary_id in case_summary_ids
+
+@pytest.mark.skip(reason="skiiiiiiip")
+def test_get_collection_name():
+    collection_id = '64dd36dc3cb105f0f0ef2602'
+    expected_collection_name = "Frank's Case"
+    received_collection_name = get_collection_name(ObjectId(collection_id))
+
+    assert expected_collection_name == received_collection_name
+

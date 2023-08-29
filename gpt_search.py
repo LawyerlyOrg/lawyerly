@@ -3,8 +3,6 @@ from langchain.chains import RetrievalQAWithSourcesChain
 from langchain.vectorstores import Pinecone
 from langchain.llms import OpenAI
 
-#openai.api_key  = os.getenv('OPENAI_API_KEY')
-
 def chat_with_gpt(prompt, model="gpt-3.5-turbo"):
     messages = [{"role": "user", "content": prompt}]
     response = openai.ChatCompletion.create(

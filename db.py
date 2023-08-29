@@ -1,7 +1,7 @@
 import pymongo
 import os
-#from constants import *
-from models import User, CaseSummary, ChatFile, Collection
+from models import User, CaseSummary, ChatFile, Collection, FactSheet
+from bson.objectid import ObjectId
 
 client = pymongo.MongoClient(os.environ["MONGODB_URI"])
 db = client['lawyerly']
@@ -9,13 +9,21 @@ chat_file_col = db['chat_file']
 collection_col = db['collection']
 user_col = db['user']
 case_summary_col = db['case_summary']
+fact_sheet_col = db['fact_sheet']
 
 # Insert Operations
+
+def insert_new_fact_sheet(collection_id, file_name, facts):
+    fact_sheet_object = FactSheet(file_name, facts).save()
+    fact_sheet_id = get_doc_id(fact_sheet_object)
+    # Each new fact sheet must be stored in a collection
+    add_fact_sheet_to_collection(collection_id, fact_sheet_id)
+
+    return fact_sheet_id
 
 def insert_new_case_summary(collection_id, file_name, summary):
     case_summary_object = CaseSummary(file_name, summary).save()
     case_summary_id = get_doc_id(case_summary_object)
-    print("NEW CASE SUMMARY ID", case_summary_id)
     # Each new case summary must be stored in a collection
     add_case_summary_to_collection(collection_id, case_summary_id)
     
@@ -44,27 +52,58 @@ def insert_new_user(user_email, first_name, last_name, collection_ids=[]):
     return user_id
 
 # Getter operations
+def get_case_summary(case_summary_id):
+    case_summary = case_summary_col.find_one({"_id": case_summary_id})
+    return case_summary
 
-def get_all_case_summaries(collection_id):
-    collection = collection_col.find({"_id": collection_id})
+def get_case_summary_ids(collection_id):
+    collection_obj = collection_col.find_one({"_id": collection_id})
+    case_summary_ids = collection_obj['case_summary_ids']
+
+    output = [str(i) for i in case_summary_ids]
     
-    return collection
+    return output
 
-def get_all_chat_files(collection_id):
-    print("all chat files retrieved")
+def get_collection_name(collection_id):
+    collection_obj = collection_col.find_one({"_id": collection_id})
+    collection_name = collection_obj['name']
+    
+    return collection_name
 
+def get_fact_sheet(fact_sheet_id):
+    fact_sheet = fact_sheet_col.find_one({"_id":fact_sheet_id})
+    return fact_sheet
 
-def get_collection(collection_id):
-    # may want results to be a dictionary of document type: document name
-    results = [{'document type': 'document name'}]
-    results.append(get_all_case_summaries(collection_id))
-    results.append(get_all_chat_files(collection_id))
-    return results
+def get_user_collections(user_email):
+    output = {}
+    
+    user_object = get_user(user_email)
+    user_id = user_object['_id']
 
-# Update operations
+    collection_ids = user_object['collection_ids']
+
+    collection_cursor = collection_col.find({'_id':{'$in':collection_ids}})
+
+    for line in collection_cursor:
+        output[str(line['_id'])] = line['name']
+    
+    return output
+
+def get_fact_sheets(collection_id):
+    collection_obj = collection_col.find_one({"_id": collection_id})
+    fact_sheet_ids = collection_obj['fact_sheet_ids']
+
+    output = [str(i) for i in fact_sheet_ids]
+
+    return output
+    
+# Update operations (PRIVATE FUNCTIONS)
 
 def add_collection_to_user(user_email, collection_id):
     user_col.update_one({'_id': user_email}, {'$push':{'collection_ids':collection_id}})
+
+def add_fact_sheet_to_collection(collection_id, fact_sheet_id):
+    collection_col.update_one({'_id': collection_id}, {'$push':{'fact_sheet_ids': fact_sheet_id}})
     
 # this is a more explicit version of update_collection
 def add_case_summary_to_collection(collection_id, case_summary_id):
@@ -116,18 +155,11 @@ def get_doc_id(mongo_document):
     
     return doc_id
 
-def get_user_collection_names(user_email):
-    output = {}
-
+def get_user(user_email):
     user_object = user_col.find_one({'_id':user_email})
-    collection_ids = user_object['collection_ids']
 
-    collection_cursor = collection_col.find({'_id':{'$in':collection_ids}})
+    return user_object
 
-    for line in collection_cursor:
-        output[line['_id']] = line['name']
-    
-    return output
 
 def not_test(client):
     
