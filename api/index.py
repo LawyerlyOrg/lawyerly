@@ -6,6 +6,7 @@ sys.path.append(
     os.path.abspath(os.path.join(os.path.dirname(__file__), os.path.pardir)))
 from flask import Flask, request, jsonify
 from flask_restx import reqparse
+from gpt_search import chat_with_gpt
 from pypdf import PdfReader
 from pypdf.errors import PdfReadError
 import openai
@@ -16,6 +17,7 @@ from evaluate_cases import evaluate_relevancy_for_summaries_in_collection
 from ingest import pdf_to_string, process_pdfs
 from bson.objectid import ObjectId
 from bson.errors import InvalidId
+from install_certificates import handle_certificates
 
 app = Flask(__name__)
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
@@ -30,6 +32,12 @@ with app.app_context():
         index_name = "test4"
 
 # TODO: in the future, make a chat function, whereby user can query their private data.
+@app.route('/chat_with_gpt')
+def chat():
+    prompt = request.args.get('prompt')
+    print('prompt', prompt)
+    text = chat_with_gpt(prompt)
+    return text
 
 @app.route('/collection/<string:collection_id>/factsheets', methods=['POST', 'GET'])
 def factsheets(collection_id):
@@ -148,5 +156,5 @@ def home():
     return 'Home Page Route'
 
 if __name__ == '__main__':
-   
+    handle_certificates()
     app.run()
