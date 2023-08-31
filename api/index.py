@@ -32,12 +32,14 @@ with app.app_context():
         index_name = "test4"
 
 # TODO: in the future, make a chat function, whereby user can query their private data.
-@app.route('/chat_with_gpt')
-def chat():
+# use combination of user_email and collection_name to create a name_space for pinecone.
+@app.route('/chat_with_gpt', methods=['GET'])
+def chat(user_email, collection_id):
+    # I want to know the cases / namespaces associated with the collection
     prompt = request.args.get('prompt')
     print('prompt', prompt)
     text = chat_with_gpt(prompt)
-    return text
+    return text, 200
 
 @app.route('/collection/<string:collection_id>/factsheets', methods=['POST', 'GET'])
 def factsheets(collection_id):
