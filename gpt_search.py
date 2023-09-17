@@ -12,10 +12,14 @@ def chat_with_gpt(prompt, model="gpt-3.5-turbo"):
     )
     return response.choices[0].message["content"]
 
-def chat_with_index(query, index, file_name):
-    meta_filter = {'source':file_name}
-    chain = RetrievalQAWithSourcesChain.from_chain_type(
-        llm=OpenAI(temperature=0.0), chain_type="stuff", retriever=index.as_retriever(search_kwargs={'filter': meta_filter}))
+def chat_with_index(query, index, file_name = ""):
+    if len(file_name) > 0:
+        meta_filter = {'source':file_name}
+        chain = RetrievalQAWithSourcesChain.from_chain_type(
+            llm=OpenAI(temperature=0.0), chain_type="stuff", retriever=index.as_retriever(search_kwargs={'filter': meta_filter}))
+    else:
+        chain = RetrievalQAWithSourcesChain.from_chain_type(
+            llm=OpenAI(temperature=0.0), chain_type="stuff", retriever=index.as_retriever())
     result = chain({'question': query}, return_only_outputs=True)
     return result
 

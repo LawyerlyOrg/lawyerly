@@ -6,7 +6,7 @@ sys.path.append(
     os.path.abspath(os.path.join(os.path.dirname(__file__), os.path.pardir)))
 from flask import Flask, request, jsonify
 from flask_restx import reqparse
-from gpt_search import chat_with_gpt
+from gpt_search import chat_with_index, get_existing_index
 from pypdf import PdfReader
 from pypdf.errors import PdfReadError
 import openai
@@ -33,12 +33,14 @@ with app.app_context():
 
 # TODO: in the future, make a chat function, whereby user can query their private data.
 # use combination of user_email and collection_name to create a name_space for pinecone.
-@app.route('/chat_with_gpt', methods=['GET'])
+# optional to chat with all documents in the collection or a specified file.
+@app.route('user/<string:user_email>/collection/<string:collection_id>/chat_with_index', methods=['GET'])
 def chat(user_email, collection_id):
-    # I want to know the cases / namespaces associated with the collection
-    prompt = request.args.get('prompt')
-    print('prompt', prompt)
-    text = chat_with_gpt(prompt)
+    query = request.args.get('prompt')
+    print('query', query)
+    collection_name = get_collection_name(ObjectId(collection_id)) 
+    index = get_existing_index(index_name, embeddings, collection_name)
+    text = chat_with_index(query, index)['answer']
     return text, 200
 
 @app.route('/collection/<string:collection_id>/factsheets', methods=['POST', 'GET'])
@@ -101,6 +103,8 @@ def collections(user_email):
     
         return collection_id, 201
 
+# TODO: update so that when processing PDFs, pass in collection_name and user_email, so that can
+# be utilized to create the namespace within pinecone index.
 @app.route('/collection/<string:collection_id>/cases',  methods=['POST', 'GET'])
 def cases(collection_id):
     
