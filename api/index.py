@@ -40,8 +40,9 @@ with app.app_context():
 def chat(user_email, collection_id):
     query = request.args.get('prompt')
     print('query', query)
-    collection_name = get_collection_name(ObjectId(collection_id)) 
-    index = get_existing_index(index_name, embeddings, collection_name)
+    collection_name = get_collection_name(ObjectId(collection_id))
+    collection_full_name = user_email + "_" + collection_name 
+    index = get_existing_index(index_name, embeddings, collection_full_name)
     text = chat_with_index(query, index)['answer']
     return text, 200
 
@@ -107,8 +108,8 @@ def collections(user_email):
 
 # TODO: update so that when processing PDFs, pass in collection_name and user_email, so that can
 # be utilized to create the namespace within pinecone index.
-@app.route('/collection/<string:collection_id>/cases',  methods=['POST', 'GET'])
-def cases(collection_id):
+@app.route('/user/<string:user_email>/collection/<string:collection_id>/cases',  methods=['POST', 'GET'])
+def cases(user_email, collection_id):
     
     if request.method == "POST":
 
@@ -136,7 +137,9 @@ def cases(collection_id):
             except PdfReadError:
                 return "Invalid file type", 400
             
-        process_pdfs(request.files, embeddings, index_name, collection_name, ObjectId(collection_id), law_area, api_mode=True)
+        collection_full_name = user_email + "_" + collection_name
+            
+        process_pdfs(request.files, embeddings, index_name, collection_full_name, ObjectId(collection_id), law_area, api_mode=True)
 
         return 'Case file(s) summarized successfully', 201
 
