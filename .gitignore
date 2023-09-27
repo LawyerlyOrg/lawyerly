@@ -4,3 +4,4 @@ __pycache__/
 api/install_certificates.py
 assets/
 api_exports.sh
+node_modules
