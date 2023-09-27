@@ -36,7 +36,7 @@ with app.app_context():
 # optional to chat with all documents in the collection or a specified file.
 # TODO: update so that process_pdfs, and referencing functions utilize the user_email parameter
 # which is to be joined with the collection_name to create a namespace for Pinecone.
-@app.route('user/<string:user_email>/collection/<string:collection_id>/chat_with_index', methods=['GET'])
+@app.route('/user/<string:user_email>/collection/<string:collection_id>/chat_with_collection', methods=['GET'])
 def chat(user_email, collection_id):
     query = request.args.get('prompt')
     print('query', query)
