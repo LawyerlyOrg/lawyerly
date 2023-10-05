@@ -1,0 +1,20 @@
+CRIMINAL_LAW_PROMPT = f"""
+    Provide a legal summary of the Document
+    """
+TORT_LAW_PROMPT = ''
+CONTRACT_LAW_PROMPT = ''
+CONSTITUTIONAL_LAW_PROMPT = ''
+ADMINISTRATIVE_LAW_PROMPT = ''
+FAMILY_LAW_PROMPT = ''
+IMMIGRATION_LAW_PROMPT = ''
+CORPORATE_LAW_PROMPT = ''
+ENVIRONMENTAL_LAW_PROMPT = ''
+COPYRIGHT_LAW_PROMPT = ''
+SECURITIES_LAW_PROMPT = ''
+PROPERTY_LAW_PROMPT = ''
+
+prompt_dict = {'criminal_law':CRIMINAL_LAW_PROMPT, 'tort_law':TORT_LAW_PROMPT, 'contract_law':CONTRACT_LAW_PROMPT , 'constitutional_law':CONSTITUTIONAL_LAW_PROMPT,
+               'administrative_law':ADMINISTRATIVE_LAW_PROMPT, 'family_law':FAMILY_LAW_PROMPT, 'immigration_law':IMMIGRATION_LAW_PROMPT, 'corporate_law':CORPORATE_LAW_PROMPT, 
+               'environmental_law':ENVIRONMENTAL_LAW_PROMPT, 'copyright_law':COPYRIGHT_LAW_PROMPT, 'securities_law':SECURITIES_LAW_PROMPT, 'property_law':PROPERTY_LAW_PROMPT}
+
+

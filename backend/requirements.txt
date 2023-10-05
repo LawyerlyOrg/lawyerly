@@ -1,0 +1,11 @@
+Flask
+langchain
+openai
+pinecone-client
+pymongo
+pymodm
+PyPDF2
+pytest
+tiktoken
+flask_restx
+pypdf
