@@ -1,8 +1,0 @@
-{
-  "dependencies": {
-    "vue": "^3.3.4"
-  },
-  "devDependencies": {
-    "@babel/core": "^7.23.0"
-  }
-}

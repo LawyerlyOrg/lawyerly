@@ -2,6 +2,7 @@ import os
 import sys
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 import pytest
+import pymongo
 from db import *
 
 @pytest.fixture
@@ -140,4 +141,12 @@ def test_db_insert_operations(file_name, sample_summary):
     case_summary_ids = collection_object['case_summary_ids']
 
     assert case_summary_id in case_summary_ids
+
+@pytest.mark.skip(reason="skiiiiiiip")
+def test_get_collection_name():
+    collection_id = '64dd36dc3cb105f0f0ef2602'
+    expected_collection_name = "Frank's Case"
+    received_collection_name = get_collection_name(ObjectId(collection_id))
+
+    assert expected_collection_name == received_collection_name
 
