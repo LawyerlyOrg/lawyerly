@@ -1,25 +1,16 @@
 <template>
-  <CollectionsComponent />
+<div class="section">
+  <div class="container">
+    <simple-upload></simple-upload>
+  </div>
+</div>
 </template>
 
 <script>
-import CollectionsComponent from './components/Collections.vue'
+import SimpleUpload from './SimpleUpload.vue';
 
 export default {
-  name: 'App',
-  components: {
-    CollectionsComponent
-  }
+  name: "App",
+  components: {SimpleUpload}
 }
 </script>
-
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
-</style>
