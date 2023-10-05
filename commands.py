@@ -2,7 +2,6 @@ from gpt_search import *
 from ingest import *
 from fact_sheet import *
 
-
 def commands(index_name, embeddings):
     query_text = ' '
 
