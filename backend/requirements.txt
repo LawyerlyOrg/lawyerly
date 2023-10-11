@@ -1,4 +1,7 @@
-Flask
+Flask==3.0.0
+Flask-RESTful>0.3.8
+gunicorn
+Werkzeug
 langchain
 openai
 pinecone-client
@@ -7,5 +10,4 @@ pymodm
 PyPDF2
 pytest
 tiktoken
-flask_restx
 pypdf

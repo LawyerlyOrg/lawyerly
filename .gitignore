@@ -3,3 +3,4 @@ __pycache__/
 api/install_certificates.py
 .vercel
 .vercel
+env_variables.yaml
