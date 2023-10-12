@@ -19,6 +19,7 @@ from evaluate_cases import evaluate_relevancy_for_summaries_in_collection
 from ingest import pdf_to_string, process_pdfs
 from bson.objectid import ObjectId
 from bson.errors import InvalidId
+from bson import json_util
 #from install_certificates import handle_certificates
 import shutil
 
@@ -88,8 +89,8 @@ def factsheets(collection_id):
     
     if request.method == "GET":
         fact_sheet_ids = get_fact_sheets(ObjectId(collection_id))
-        fact_sheet_objects = [get_fact_sheet(id) for id in fact_sheet_ids]
-        return fact_sheet_objects, 200
+        fact_sheet_objects = [get_fact_sheet(ObjectId(fact_sheet_id)) for fact_sheet_id in fact_sheet_ids]
+        return json_util.dumps(fact_sheet_objects), 200
 
 @app.route('/user/<string:user_email>/collections', methods=['GET'])
 def get_collections(user_email):
