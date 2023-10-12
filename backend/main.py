@@ -5,6 +5,7 @@ from io import BytesIO
 sys.path.append(
     os.path.abspath(os.path.join(os.path.dirname(__file__), os.path.pardir)))
 from flask import Flask, request, jsonify
+from flask_cors import CORS
 from flask_restful import reqparse
 from gpt_search import chat_with_gpt
 from pypdf import PdfReader
@@ -13,7 +14,7 @@ import openai
 import pinecone
 from langchain.embeddings.openai import OpenAIEmbeddings
 from pymongo import MongoClient
-from db import get_user_collections, insert_new_collection, insert_new_fact_sheet, get_collection_name, get_fact_sheets, get_case_summary_ids
+from db import get_user_collections, insert_new_collection, insert_new_fact_sheet, get_collection_name, get_fact_sheets, get_case_summary_ids, get_fact_sheet
 from evaluate_cases import evaluate_relevancy_for_summaries_in_collection
 from ingest import pdf_to_string, process_pdfs
 from bson.objectid import ObjectId
@@ -22,6 +23,7 @@ from bson.errors import InvalidId
 import shutil
 
 app = Flask(__name__)
+CORS(app)
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
 
 with app.app_context():
@@ -86,7 +88,8 @@ def factsheets(collection_id):
     
     if request.method == "GET":
         fact_sheet_ids = get_fact_sheets(ObjectId(collection_id))
-        return fact_sheet_ids, 200
+        fact_sheet_objects = [get_fact_sheet(id) for id in fact_sheet_ids]
+        return fact_sheet_objects, 200
 
 @app.route('/user/<string:user_email>/collections', methods=['GET'])
 def get_collections(user_email):
