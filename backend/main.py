@@ -5,7 +5,7 @@ from io import BytesIO
 sys.path.append(
     os.path.abspath(os.path.join(os.path.dirname(__file__), os.path.pardir)))
 from flask import Flask, request, jsonify
-from flask_restx import Api, Resource, reqparse
+from flask_restful import reqparse
 from gpt_search import chat_with_gpt
 from pypdf import PdfReader
 from pypdf.errors import PdfReadError
@@ -20,7 +20,6 @@ from bson.objectid import ObjectId
 from bson.errors import InvalidId
 #from install_certificates import handle_certificates
 import shutil
-
 
 app = Flask(__name__)
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
@@ -183,7 +182,7 @@ def relevancies(): #/relevancies?collection_id=00000000000000&fact_sheet_id=0101
     return jsonify(relevancies), 200
 
 @app.route('/')
-def home():
+def root():
     return 'Home Page Route'
 
 @app.route('/about')
