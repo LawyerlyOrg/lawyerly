@@ -14,7 +14,7 @@ import openai
 import pinecone
 from langchain.embeddings.openai import OpenAIEmbeddings
 from pymongo import MongoClient
-from db import get_user_collections, insert_new_collection, insert_new_fact_sheet, get_collection_name, get_fact_sheets, get_case_summary_ids, get_fact_sheet
+from db import get_user_collections, insert_new_collection, insert_new_fact_sheet, get_collection_name, get_fact_sheets, get_case_summary_ids, get_case_summary,get_fact_sheet
 from evaluate_cases import evaluate_relevancy_for_summaries_in_collection
 from ingest import pdf_to_string, process_pdfs
 from bson.objectid import ObjectId
@@ -151,7 +151,8 @@ def cases(collection_id):
 
     if request.method == 'GET':
         case_summary_ids = get_case_summary_ids(ObjectId(collection_id))
-        return case_summary_ids, 200
+        case_objects = [get_case_summary(ObjectId(case_summary_id)) for case_summary_id in case_summary_ids]
+        return json_util.dumps(case_objects), 200
 
 @app.route('/relevancies',  methods=['GET'])
 def relevancies(): #/relevancies?collection_id=00000000000000&fact_sheet_id=0101010101001

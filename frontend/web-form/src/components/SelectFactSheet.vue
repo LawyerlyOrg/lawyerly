@@ -1,25 +1,20 @@
 <template>
-    <div>
+  <div>
     <h1>{{ message }}</h1>
   </div>
-    <form>
-        <label>Select FactSheet: </label>
+  <form>
+    <label>Select Fact sheet: </label>
 
-        
-        <div class="factsheet">
-            <input type="radio">
-            <label>Ghazals Case</label>
-        </div>
-        <div class="factsheet">
-            <input type="radio">
-            <label>Hadis Case</label>
-        </div>
-        <div class="factsheet">
-            <input type="radio">
-            <label>Farhangs Case</label>
-        </div>
-    </form>
+    <div class="field">
+      <div class="control" v-for="(item, index) in items" :key="index">
+        <label class="radio">
+          <input type="radio" :value="item.name" v-model="selectedItem">
+          {{ item.name }}
+        </label>
+      </div>
+    </div>
 
+  </form>
 </template>
 
 <script>
@@ -29,14 +24,15 @@ export default {
   name: 'App',
   data() {
     return {
+      items: [],
       message: '',
     };
   },
   mounted() {
     axios.get('https://lawyerlyservice.uw.r.appspot.com/collection/65149bcca1b526a820ee1892/factsheets')
       .then((response) => {
-        this.message = response.data;
-        console.log(this.message);
+        this.items = response.data;
+        console.log(this.items);
       })
       .catch((error) => {
         console.log(error);
@@ -44,18 +40,16 @@ export default {
   },
 };
 
-
-
 </script>
 
-<style>
-form {
-    max-width: 420px;
-    margin: 30px auto;
-    background: white;
-    text-align: left;
-    padding: 40px;
-    border-radius: 10px;
-}
+<style lang="scss">
+@import '~bulma/bulma';
 
+.radio {
+  margin-bottom: 0.5rem;
+
+  input[type="radio"] {
+    margin-right: 0.5rem;
+  }
+}
 </style>
