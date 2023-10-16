@@ -36,19 +36,6 @@ with app.app_context():
         )
         index_name = "test4"
 
-"""
-class InputError(Exception):
-    # custom exception class for invalid input
-    def __init__(self, message):
-        self.message = message
-        self.status = status.HTTP_400_BAD_REQUEST
-
-@app.errorhandler(InputError)
-def handle_input_error(e):
-    # error handler for input error
-    return {'message': e.message, 'status': e.status}
-"""
-
 @app.route('/chat_with_gpt')
 def chat():
     # http://10.1.1.1:5000/chat_with_gpt?prompt=what is the meaning of life?
@@ -108,8 +95,8 @@ def create_collection(user_email):
     # create a parser object
     parser = reqparse.RequestParser()
     # add name and description arguments
-    parser.add_argument("name", required=True, help="Collection Name cannot be blank!")
-    parser.add_argument("description", required=True, help="Collection Description cannot be blank!")
+    parser.add_argument("name", required=True, help="Collection Name cannot be blank!", location='args')
+    parser.add_argument("description", required=True, help="Collection Description cannot be blank!", location='args')
     # parse the arguments from the request
     args = parser.parse_args()
 
@@ -140,7 +127,7 @@ def cases(collection_id):
         # create a parser object
         parser = reqparse.RequestParser()
         # add name and description arguments
-        parser.add_argument("law_area", required=True, help="Law area cannot be blank!")
+        parser.add_argument("law_area", required=True, help="Law area cannot be blank!", location='args')
         # parse the arguments from the request
         args = parser.parse_args()
         law_area = args["law_area"]
@@ -172,14 +159,14 @@ def relevancies(): #/relevancies?collection_id=00000000000000&fact_sheet_id=0101
     # args = request.args.to_dict()
     parser = reqparse.RequestParser()
     # add name and description arguments
-    parser.add_argument("collection_id", required=True, type=str, help="Collection id cannot be blank!")
-    parser.add_argument("fact_sheet_id", required=True, type=str, help="Fact sheet id cannot be blank!")
+    parser.add_argument("collection_id", required=True, type=str, help="Collection id cannot be blank!", location='args')
+    parser.add_argument("fact_sheet_id", required=True, type=str, help="Fact sheet id cannot be blank!", location='args')
     # parse the arguments from the request
+    print("line 178")
     args = parser.parse_args()
-
+    print("line 180")
     collection_id = args["collection_id"]
     fact_sheet_id = args["fact_sheet_id"]
-    
     relevancies = evaluate_relevancy_for_summaries_in_collection(ObjectId(collection_id), ObjectId(fact_sheet_id))
     #print('Case file(s) evaluated for relevancy against fact sheet successfully!')
     #print(relevancies, type(relevancies))
