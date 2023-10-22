@@ -1,13 +1,21 @@
 <template>
     <div>
-      Selected: {{ selected }}
-    </div>
-    <div>
-      <div v-for="{relevancy, index} in relevancies" :key="index">
-        {{ relevancy }}
-      </div>
-      <!-- <p v-if="relevancies">{{ relevancies }}</p> -->
-    </div>
+    <button v-if="selected" @click="getRelevancy">Generate</button>
+  </div>
+    <table class="table is-bordered is-striped is-narrow is-hoverable">
+      <thead>
+        <tr>
+          <th>Key</th>
+          <th>Value</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="(value, key) in relevancies" :key="key">
+          <td>{{ key }}</td>
+          <td>{{ value }}</td>
+        </tr>
+      </tbody>
+    </table>
   </template>
   
   <script>
@@ -17,19 +25,22 @@ import axios from 'axios';
     name: 'RelevanciesReport',
     props: {
       selected: {
+        type: String,
+        required: true,
         default: ''
       }
     },
     data() {
       return {
+        fact_sheet_id: '',
         relevancies: [],
       }
     },
-    watch: {
-      selected: function (newVal) {
-        //
-        axios.get('https://lawyerlyservice.uw.r.appspot.com/relevancies?collection_id=65149bcca1b526a820ee1892&fact_sheet_id=' + newVal, 
-          { params: { selected: newVal }}
+    methods: {
+      getRelevancy() {
+        console.log(this.selected);
+        axios.get('https://lawyerlyservice.uw.r.appspot.com/relevancies?collection_id=65149bcca1b526a820ee1892&fact_sheet_id=' + this.selected, 
+          { params: { selected: this.selected }}
           )
         .then(response => {
           // handle response data
@@ -41,8 +52,11 @@ import axios from 'axios';
           console.log(error);
 
         }, []);
+        
+
       }
     }
+
   };
   </script>
 
