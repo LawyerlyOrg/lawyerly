@@ -1,6 +1,7 @@
 <template>
-  <SelectFactSheet />
+  <SelectFactSheet v-bind:child-prop="selectedItem" v-on:custom-event="updateSelectedItem"/>
   <SelectCases />
+  <RelevanciesReport :selected="selectedItem"/>
 
 </template>
 
@@ -8,10 +9,21 @@
 
 import SelectFactSheet from './components/SelectFactSheet.vue'
 import SelectCases from './components/SelectCases.vue'
+import RelevanciesReport from './components/RelevanciesReport.vue'
 
 export default {
   name: 'App',
-  components: { SelectFactSheet, SelectCases }
+  components: { SelectFactSheet, SelectCases, RelevanciesReport },
+  data() {
+  return {
+    selectedItem: '',
+  }
+},
+methods: {
+  updateSelectedItem(newValue) {
+    this.selectedItem = newValue;
+  }
+}
   
 }
 </script>
@@ -28,6 +40,6 @@ export default {
 
 body {
   margin: 0;
-  background: #eee;
+  background: white;
 }
 </style>

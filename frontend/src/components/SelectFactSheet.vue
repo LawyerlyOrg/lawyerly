@@ -3,12 +3,12 @@
     <h1>{{ message }}</h1>
   </div>
   <form>
-    <label>Select Fact sheet: </label>
+    <label>Select Fact Sheet: </label>
 
     <div class="field">
       <div class="control" v-for="(item, index) in items" :key="index">
         <label class="radio">
-          <input type="radio" :value="item.name" v-model="selectedItem">
+          <input type="radio" :value="item._id.$oid" v-model="selectedItem" @change="emitSelectedItem">
           {{ item.name }}
         </label>
       </div>
@@ -22,12 +22,24 @@
 import axios from 'axios'
 export default {
   name: 'App',
+  props: ['modelValue'],
   data() {
     return {
       items: [],
-      message: '',
+      selectedItem: this.selectedItem,
     };
   },
+  methods: {
+    emitSelectedItem() {
+      this.$emit('custom-event', this.selectedItem);
+    }
+
+  },
+  // watch: {
+  //   selectedItem(newValue) {
+  //     this.$emit('update:modelValue', newValue)
+  //   }
+  // },
   mounted() {
     axios.get('https://lawyerlyservice.uw.r.appspot.com/collection/65149bcca1b526a820ee1892/factsheets')
       .then((response) => {

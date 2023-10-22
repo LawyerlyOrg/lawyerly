@@ -1,28 +1,13 @@
 <template>
     <form>
-        <label>Select Cases</label>
-
+        <label>Cases:</label>
         <div>
       <ul>
         <div v-for="(item, index) in items" :key="index">
-          <input type="checkbox" :value="item.id" v-model="message">
           {{ item.name }}
         </div>
       </ul>
     </div>
-
-        <!-- <div class="case">
-            <input type="checkbox">
-            <label>Case1</label>
-        </div>
-        <div class="case">
-            <input type="checkbox">
-            <label>Case2</label>
-        </div>
-        <div class="case">
-            <input type="checkbox">
-            <label>Case3</label>
-        </div> -->
     </form>
 
 </template>
@@ -57,10 +42,10 @@ export default {
 <style>
 form {
     max-width: 420px;
-    margin: 30px auto;
+    margin: 20px auto;
     background: white;
     text-align: left;
-    padding: 40px;
+    padding: 10px;
     border-radius: 10px;
 }
 
