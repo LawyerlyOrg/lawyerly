@@ -29,22 +29,20 @@
         </tbody>
       </table>
 
-      <!-- <table class="table is-bordered is-striped is-hoverable is-narrow">
+      <table class="table is-bordered is-striped is-hoverable is-narrow">
         <thead>
           <tr>
             <th>Name</th>
-            <th>Age</th>
             <th>Gender</th>
           </tr>
         </thead>
         <tbody>
           <tr v-for="(person, index) in people" :key="index">
             <td>{{ person.name }}</td>
-            <td>{{ person.age }}</td>
             <td class="break-newlines">{{ person.gender }}</td>
           </tr>
         </tbody>
-      </table> -->
+      </table>
     </div>
   </div>
 </template>
@@ -70,6 +68,12 @@ export default {
       fact_sheet_id: "",
       relevancies: [],
       loading: false,
+      people: [
+        { name: "Jane Smith", gender: "- Both the summary and the factsheet mention the topic of law and legal reforms.\n- Both mention the concept of self-defence.\n- Both mention the purpose of simplifying the legislative text.\n- Both mention the removal of preconditions in the old law.\n- Both mention a three-part framework in the new law.\n- Both mention a specific case involving a person named Allison and her partner Daniel." },
+        { name: "Alice Johnson", gender: "- Both the summary and the factsheet mention a case involving a trial judge's error of law.\n- Both mention the concept of party liability.\n- Both mention the need for a new trial.\n- Both mention the Criminal Code and its treatment of principal offenders and parties to an offense.\n- Both mention the importance of considering all theories of liability based on the evidence." },
+        { name: "Bob Brown", gender: "- Both the Summary and the Factsheet mention Canada and its legal system.\n- Both mention the topic of self-defence.\n- Both mention the purpose of the reforms to simplify the legislative text and facilitate the application of self-defence principles.\n- Both mention the removal of preconditions and the creation of a single, three-part defence.\n- Both mention a person named Daniel and his sexual relationship with a person named Allison." },
+        { name: "Charlie Davis", gender: "Non-Binary" },
+      ],
     };
   },
   methods: {

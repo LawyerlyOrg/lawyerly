@@ -1,14 +1,19 @@
 <template>
-  <form>
-    <label>Cases:</label>
-    <div>
-      <ul>
-        <div v-for="(item, index) in cases" :key="index">
-          {{ item.name }}
-        </div>
-      </ul>
-    </div>
-  </form>
+<div class="card">
+  <header class="card-header">
+    <p class="card-header-title">
+      List of Cases
+    </p>
+  </header>
+  <div class="card-content">
+    <ul>
+      <li v-for="(item, index) in cases" :key="index">
+      {{ item.name }}
+    </li>
+    </ul>
+  </div>
+</div>
+
 </template>
 
 <script>
@@ -29,7 +34,7 @@ export default {
   mounted() {
     axios
       .get(
-        "https://lawyerlyservice.uw.r.appspot.com/collection/65149bcca1b526a820ee1892/cases"
+        "https://lawyerlyservice.uw.r.appspot.com/collection/6536eeb20c27a16e16d0ad92/cases"
       )
       .then((response) => {
         this.cases = response.data;
@@ -44,12 +49,7 @@ export default {
 </script>
 
 <style>
-form {
-  max-width: 420px;
-  margin: 20px auto;
-  background: white;
-  text-align: left;
-  padding: 10px;
-  border-radius: 10px;
+.custom-card .card-content {
+  margin: 1px;  /* Adjust this value to your liking */
 }
 </style>

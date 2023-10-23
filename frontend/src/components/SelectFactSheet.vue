@@ -2,19 +2,23 @@
   <div>
     <h1>{{ message }}</h1>
   </div>
-  <form>
-    <label>Select Fact Sheet: </label>
 
-    <div class="field">
+  <div class="card">
+    <header class="card-header">
+      <p class="card-header-title">
+        Select a Fact Sheet
+      </p>
+    </header>
+    <div class="card-content">
       <div class="control" v-for="(item, index) in items" :key="index">
-        <label class="radio">
-          <input type="radio" :value="item._id.$oid" v-model="selectedItem" @change="emitSelectedItem">
-          {{ item.name }}
+        <label class="radio tooltip-label">
+            <input type="radio" :value="item._id.$oid" v-model="selectedItem" @change="emitSelectedItem">
+            {{ item.name }}
+
         </label>
       </div>
     </div>
-
-  </form>
+  </div>
 </template>
 
 <script>
@@ -41,7 +45,7 @@ export default {
   //   }
   // },
   mounted() {
-    axios.get('https://lawyerlyservice.uw.r.appspot.com/collection/65149bcca1b526a820ee1892/factsheets')
+    axios.get('https://lawyerlyservice.uw.r.appspot.com/collection/6536eeb20c27a16e16d0ad92/factsheets')
       .then((response) => {
         this.items = response.data;
         console.log(this.items);
@@ -64,4 +68,5 @@ export default {
     margin-right: 0.5rem;
   }
 }
+
 </style>
