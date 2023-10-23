@@ -1,7 +1,7 @@
 <template>
   <SelectFactSheet v-bind:child-prop="selectedItem" v-on:custom-event="updateSelectedItem"/>
-  <SelectCases />
-  <RelevanciesReport :selected="selectedItem"/>
+  <SelectCases v-bind:child-prop="cases" v-on:custom-event="updateCases"/>
+  <RelevanciesReport :selected="selectedItem" :sharedCases="cases"/>
 
 </template>
 
@@ -17,13 +17,18 @@ export default {
   data() {
   return {
     selectedItem: '',
+    cases: []
   }
 },
 methods: {
   updateSelectedItem(newValue) {
     this.selectedItem = newValue;
+  },
+  updateCases(newCases) {
+    this.cases = newCases;
   }
 }
+
   
 }
 </script>
