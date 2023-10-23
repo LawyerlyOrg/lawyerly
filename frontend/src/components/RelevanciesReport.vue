@@ -1,14 +1,17 @@
 <template>
   <div class="container">
     <div>
-      <button class="button is-primary" v-if="selected" @click="getRelevancy">
+      <button class="button is-primary" v-if="selected && !loading" @click="getRelevancy">
         Generate
       </button>
+      <div v-if="loading">
+        <i class="fa fa-spinner fa-spin">Loading...</i>
+      </div>
     </div>
 
-    <div v-for="(item, key) in sharedCases" :key="key">
+    <!-- <div v-for="(item, key) in sharedCases" :key="key">
       <td>{{ item.name }}</td>
-    </div>
+    </div> -->
     
     <div class="has-text-left">
       <table class="table is-bordered is-striped is-hoverable is-narrow">
@@ -66,11 +69,13 @@ export default {
     return {
       fact_sheet_id: "",
       relevancies: [],
+      loading: false,
     };
   },
   methods: {
     getRelevancy() {
       console.log(this.selected);
+      this.loading = true;
       axios
         .get(
           "https://lawyerlyservice.uw.r.appspot.com/relevancies?collection_id=65149bcca1b526a820ee1892&fact_sheet_id=" +
@@ -81,10 +86,12 @@ export default {
           // handle response data
           this.relevancies = response.data;
           console.log(this.relevancies);
+          this.loading = false;
         })
         .catch((error) => {
           // handle error
           console.log(error);
+          this.loading = false;
         }, []);
     },
   },
