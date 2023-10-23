@@ -6,9 +6,9 @@
       </button>
     </div>
 
-    <!-- <div v-for="(item, key) in sharedCases" :key="key">
+    <div v-for="(item, key) in sharedCases" :key="key">
       <td>{{ item.name }}</td>
-    </div> -->
+    </div>
     
     <div class="has-text-left">
       <table class="table is-bordered is-striped is-hoverable is-narrow">
@@ -19,8 +19,8 @@
           </tr>
         </thead>
         <tbody v-if="relevancies">
-          <tr v-for="(item, key, index) in relevancies" :key="key">
-            <td>{{ sharedCases[index].name }}</td>
+          <tr v-for="(item, key) in relevancies" :key="key">
+            <td>{{ sharedCases.find((element) => element._id.$oid === key).name }}</td>
             <td class="break-newlines">{{ item }}</td>
           </tr>
         </tbody>
