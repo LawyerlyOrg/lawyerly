@@ -13,6 +13,7 @@
     "bulma-o-steps": "^1.1.0",
     "bulma-steps": "^2.2.1",
     "core-js": "^3.8.3",
+    "form-wizard-vue3": "^1.1.0",
     "vue": "^3.2.13"
   },
   "devDependencies": {

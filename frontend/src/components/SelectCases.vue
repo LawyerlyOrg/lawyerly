@@ -1,14 +1,15 @@
 <template>
 <div class="card">
-  <header class="card-header">
-    <p class="card-header-title">
-      List of Cases
-    </p>
-  </header>
+  <header class="has-text-weight-bold">
+      Select Cases
+    </header>
   <div class="card-content">
     <ul>
-      <li v-for="(item, index) in cases" :key="index">
+      <li v-for="(item, index) in cases" :key="index" v-on:mouseover="item.showText = true" v-on:mouseleave="item.showText = false">
       {{ item.name }}
+      <div v-if="item.showText">
+        {{ item.summary }}
+      </div>
     </li>
     </ul>
   </div>
@@ -52,4 +53,16 @@ export default {
 .custom-card .card-content {
   margin: 1px;  /* Adjust this value to your liking */
 }
+
+header { 
+  display: block;
+  font-size: 1.5em;
+  margin-top: 0.5em;
+  margin-bottom: 0.67em;
+  padding-top: 1em;
+  margin-left: 0;
+  margin-right: 0;
+  font-weight: bold;
+}
+
 </style>

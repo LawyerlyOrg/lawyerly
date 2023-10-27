@@ -4,16 +4,17 @@
   </div>
 
   <div class="card">
-    <header class="card-header">
-      <p class="card-header-title">
-        Select a Fact Sheet
-      </p>
+    <header class="has-text-weight-bold">
+      Select Fact Sheet
     </header>
     <div class="card-content">
-      <div class="control" v-for="(item, index) in items" :key="index">
+      <div class="control" v-for="(item, index) in items" :key="index" v-on:mouseover="item.showText = true" v-on:mouseleave="item.showText = false">
         <label class="radio tooltip-label">
             <input type="radio" :value="item._id.$oid" v-model="selectedItem" @change="emitSelectedItem">
             {{ item.name }}
+            <div v-if="item.showText">
+              {{ item.facts }}
+            </div>
 
         </label>
       </div>
@@ -67,6 +68,16 @@ export default {
   input[type="radio"] {
     margin-right: 0.5rem;
   }
+}
+header { 
+  display: block;
+  font-size: 1.5em;
+  margin-top: 0.5em;
+  margin-bottom: 0.67em;
+  padding-top: 1em;
+  margin-left: 0;
+  margin-right: 0;
+  font-weight: bold;
 }
 
 </style>
