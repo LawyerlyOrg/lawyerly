@@ -2,28 +2,33 @@
   <SelectFactSheet v-bind:child-prop="selectedItem" v-on:custom-event="updateSelectedItem"/>
   <SelectCases v-bind:child-prop="cases" v-on:custom-event="updateCases"/>
   <RelevanciesReport :selected="selectedItem" :sharedCases="cases"/>
-
 </template> -->
-
-
 
 <template>
 
-<nav class="navbar" role="navigation" aria-label="main navigation">
-  <div class="navbar-brand">
+<nav class="navbar">
+  <div class="navbar">
     <a class="navbar-item" href="https://bulma.io">
-      <img src="https://bulma.io/images/bulma-logo.png" width="112" height="28">
+      <img src="@/assets/abstract_geometric_design.png" width="112" height="112">
     </a>
-    </div>
+  </div>
 </nav>
-
   <div class="container">
+    
+    
+
     <div class="columns is-one-half is-gapless">
-      <div class="column custom-column ">
-        <SelectFactSheet v-bind:child-prop="selectedItem" v-on:custom-event="updateSelectedItem" />
+      <div class="column custom-column">
+        <SelectFactSheet
+          v-bind:child-prop="selectedItem"
+          v-on:custom-event="updateSelectedItem"
+        />
       </div>
       <div class="column custom-column">
-        <SelectCases v-bind:child-prop="cases" v-on:custom-event="updateCases" />
+        <SelectCases
+          v-bind:child-prop="cases"
+          v-on:custom-event="updateCases"
+        />
       </div>
     </div>
     <RelevanciesReport :selected="selectedItem" :sharedCases="cases" />
@@ -31,19 +36,18 @@
 </template>
 
 <script>
-
-import SelectFactSheet from './components/SelectFactSheet.vue'
-import SelectCases from './components/SelectCases.vue'
-import RelevanciesReport from './components/RelevanciesReport.vue'
+import SelectFactSheet from "./components/SelectFactSheet.vue";
+import SelectCases from "./components/SelectCases.vue";
+import RelevanciesReport from "./components/RelevanciesReport.vue";
 
 export default {
-  name: 'App',
-  components: { SelectFactSheet, SelectCases, RelevanciesReport },
+  name: "App",
+  components: { SelectFactSheet, SelectCases, RelevanciesReport},
   data() {
     return {
-      selectedItem: '',
-      cases: []
-    }
+      selectedItem: "",
+      cases: [],
+    };
   },
   methods: {
     updateSelectedItem(newValue) {
@@ -51,11 +55,9 @@ export default {
     },
     updateCases(newCases) {
       this.cases = newCases;
-    }
-  }
-
-
-}
+    },
+  },
+};
 </script>
 
 <style scoped>
@@ -82,5 +84,4 @@ body {
     width: 800px; /* or your preferred width */
   }
 }
-
 </style>
