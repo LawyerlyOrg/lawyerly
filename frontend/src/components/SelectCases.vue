@@ -8,7 +8,7 @@
       <li v-for="(item, index) in cases" :key="index" v-on:mouseover="item.showText = true" v-on:mouseleave="item.showText = false">
       {{ item.name }}
       <div v-if="item.showText">
-        {{ item.summary }}
+        <td class="break-newlines">{{ item.summary }}</td>
       </div>
     </li>
     </ul>

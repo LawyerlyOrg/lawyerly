@@ -97,7 +97,7 @@ body {
 </nav>
   <div id="app">
     <div class="container">
-      <h1>Customize with Props</h1>
+      <h1 class="title">Lawyerly Demo</h1>
       <Wizard
         squared-tabs
         card-background
@@ -114,9 +114,7 @@ body {
           {
             title: 'Generate Relevancies',
           },
-          {
-            title: 'Step 4',
-          },
+          
         ]"
         :beforeChange="onTabBeforeChange"
         @change="onChangeCurrentTab"
@@ -136,11 +134,6 @@ body {
         <h5 v-if="currentTabIndex === 2">
           
           <RelevanciesReport :selected="selectedItem" :sharedCases="cases"/>
-        
-        </h5>
-        <h5 v-if="currentTabIndex === 3">
-          
-          Tab 3
         
         </h5>
       </Wizard>
@@ -166,7 +159,7 @@ export default {
     Wizard,
     SelectFactSheet,
     SelectCases,
-    RelevanciesReport
+    RelevanciesReport,
   },
   data() {
     return {
@@ -198,7 +191,7 @@ export default {
   },
   computed: {
     nextButtonOptions() {
-      return this.currentTabIndex === 3
+      return this.currentTabIndex === 2
         ? {
             text: 'test',
             icon: 'check',
