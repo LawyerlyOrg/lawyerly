@@ -5,44 +5,35 @@
 
   <div class="card">
     <header class="has-text-weight-bold">Select Fact Sheet</header>
-    <h6 class="subtitle is-6">Click <svg-icon type="mdi" :path="path"></svg-icon> to view fact sheet</h6>
+    <h6 class="subtitle is-6">
+      Click <svg-icon type="mdi" :path="path"></svg-icon> to view fact sheet
+    </h6>
 
-    <div class="card-content">
+    <div class="invisible-box">
       <div class="control" v-for="(item, index) in items" :key="index">
-        
         <input
           type="radio"
           :value="item._id.$oid"
           v-model="selectedItem"
           @change="emitSelectedItem"
         />
-        
+
         {{ item.name }}
 
-        <svg-icon type="mdi" :path="path" @click="showModal=true"></svg-icon>
-
-        <div v-if="showModal" class="modal is-active">
-          <div class="modal-background" @click="showModal = false"></div>
-          <div class="modal-content">
-            <!-- Any kind of content can go here -->
-            <table class="box">
-              <h5 class="title is-5">Facts</h5>
-              <tr>
-                <td class="break-newlines align-left">{{ item.facts }}</td>
-              </tr>
-            </table>
-          </div>
-          <button
-            class="modal-close is-large"
-            aria-label="close"
-            @click="showModal = false"
-          ></button>
-        </div>
-        <div></div>
+        <svg-icon
+          type="mdi"
+          :path="path"
+          @click="item.showText = !item.showText"
+        ></svg-icon> 
+        <div v-if="item.showText">
+          <p class ="break-newlines" :style="{ width: 200 + '%'}">{{ item.facts }}</p>
+        </div>     
       </div>
     </div>
+    
   </div>
 </template>
+
 
 <script>
 import axios from "axios";
@@ -51,16 +42,15 @@ import { mdiTextBoxSearchOutline } from "@mdi/js";
 
 export default {
   name: "App",
-  props: ["modelValue"],
   components: {
     SvgIcon,
   },
   data() {
     return {
       items: [],
-      selectedItem: this.selectedItem,
-      showModal: false,
+      selectedItem: null,  // Initialized to null
       path: mdiTextBoxSearchOutline,
+      visible: false,
     };
   },
 
@@ -69,11 +59,7 @@ export default {
       this.$emit("custom-event", this.selectedItem);
     },
   },
-  // watch: {
-  //   selectedItem(newValue) {
-  //     this.$emit('update:modelValue', newValue)
-  //   }
-  // },
+
   mounted() {
     axios
       .get(
@@ -87,7 +73,9 @@ export default {
         console.log(error);
       });
   },
+
 };
+
 </script>
 
 <style lang="scss">
@@ -105,11 +93,19 @@ export default {
   }
 }
 
-svg { 
-  cursor: pointer; 
-  height: 1em;  /* 1em is relative to the font-size of the element or the container */
-  width: auto;  /* maintain the aspect ratio */
-  vertical-align: middle;  /* align with the middle of the adjacent text */
+
+.invisible-box {
+  display: inline-block; /* This makes the div behave like an inline element, so it can be centered using text-align */
+  width: 100%; /* Adjust this width as needed */
+  text-align: left; /* This aligns the text to the left of the invisible box */
+  margin-bottom: 2em;
+}
+
+svg {
+  cursor: pointer;
+  height: 1em; /* 1em is relative to the font-size of the element or the container */
+  width: auto; /* maintain the aspect ratio */
+  vertical-align: middle; /* align with the middle of the adjacent text */
 }
 
 header {

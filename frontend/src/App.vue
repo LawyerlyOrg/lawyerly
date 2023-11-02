@@ -153,6 +153,7 @@ import SelectFactSheet from "./components/SelectFactSheet.vue";
 import SelectCases from "./components/SelectCases.vue";
 import RelevanciesReport from "./components/RelevanciesReport.vue";
 
+
 export default {
   name: 'App',
   components: {
@@ -160,6 +161,7 @@ export default {
     SelectFactSheet,
     SelectCases,
     RelevanciesReport,
+
   },
   data() {
     return {
