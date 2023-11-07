@@ -1,17 +1,20 @@
 <template>
   <div class="container">
-    <div>
-      <button class="button is-primary" v-if="selected && !loading && !isHidden" @click="getRelevancy(); isHidden=true">
+    <!-- <div>
+      <button class="button is-primary" v-if="selectedFactSheet && !loading && !isHidden" @click="getRelevancy(); isHidden=true">
         Generate
       </button>
       <div v-if="loading">
-        <i class="fa fa-spinner fa-spin">Loading...</i>
+        Loading...
       </div>
-    </div>
+    </div> -->
 
     <!-- <div v-for="(item, key) in sharedCases" :key="key">
       <td>{{ item.name }}</td>
     </div> -->
+    <div v-if="loading" class="loading-container">
+      <img src="@/assets/loading-animation.gif" alt="Loading..." />
+    </div>
 
     <div class="has-text-left">
       <table class="table is-hoverable is-fullwidth" v-if="displayContent">
@@ -55,7 +58,7 @@ import axios from "axios";
 export default {
   name: "RelevanciesReport",
   props: {
-    selected: {
+    selectedFactSheet: {
       type: String,
       required: true,
       default: "",
@@ -80,15 +83,20 @@ export default {
       ],
     };
   },
+  mounted() {
+    if (this.selectedFactSheet) {
+      this.loading = true;
+      this.getRelevancy();
+    }
+  },
   methods: {
     getRelevancy() {
-      console.log("this is the fact sheet: " + this.selected);
+      console.log("this is the fact sheet: " + this.selectedFactSheet);
       this.loading = true;
       axios
         .get(
           "https://lawyerlyservice.uw.r.appspot.com/relevancies?collection_id=6536eeb20c27a16e16d0ad92&fact_sheet_id=" +
-            this.selected,
-          { params: { selected: this.selected } }
+            this.selectedFactSheet
         )
         .then((response) => {
           // handle response data
@@ -132,5 +140,13 @@ div {
 }
 .break-newlines {
   white-space: pre-line;
+}
+.loading-container {
+  display: flex;
+  justify-content: center; /* Center the loader horizontally */
+  align-items: center; /* Center the loader vertically */
+  height: 5vh; /* Take up full viewport height */
+  width: auto;
+  margin: 0; /* Set all margins to 0 */
 }
 </style>

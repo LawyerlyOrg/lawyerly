@@ -68,7 +68,7 @@
           />
         </h5>
         <h5 v-if="currentTabIndex === 2">
-          <RelevanciesReport :selected="selectedItem" :sharedCases="cases" />
+          <RelevanciesReport :selected-fact-sheet="selectedItem" :sharedCases="cases" />
         </h5>
       </Wizard>
     </div>
@@ -100,11 +100,13 @@ export default {
       currentTabIndex: 0,
       selectedItem: "",
       cases: [],
+      selectedFactSheet: false,
     };
   },
   methods: {
     updateSelectedItem(newValue) {
       this.selectedItem = newValue;
+      this.selectedFactSheet = true;
     },
     updateCases(newCases) {
       this.cases = newCases;
@@ -115,6 +117,7 @@ export default {
     },
     onTabBeforeChange() {
       if (this.currentTabIndex === 0) {
+      
         console.log("First Tab");
       }
       console.log("All Tabs");
@@ -133,7 +136,7 @@ export default {
             hideText: false, // default false but selected for sample
             disabled: true,
           }
-        : { disabled: false };
+        : { disabled: !this.selectedFactSheet };
     },
   },
 };

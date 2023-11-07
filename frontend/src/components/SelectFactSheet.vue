@@ -5,11 +5,11 @@
 
   <div class="card">
     <header class="has-text-weight-bold">Select Fact Sheet</header>
-    <h6 class="subtitle is-6">
+    <h6 class="subtitle is-6 mb-2">
       Click <svg-icon type="mdi" :path="path"></svg-icon> to view fact sheet
     </h6>
 
-    <div class="invisible-box">
+    <div class="invisible-box mt-2">
       <div class="control" v-for="(item, index) in items" :key="index">
         <input type="radio" :value="item._id.$oid" v-model="selectedItem" @change="emitSelectedItem" />
 
@@ -21,7 +21,7 @@
         </div>
       </div>
 
-      <div class="file has-name is-small is-light">
+      <div class="file has-name is-small is-fullwidth is-black">
         <label class="file-label">
           <input class="file-input" type="file" name="pdf" @change="uploadFile" accept="application/pdf">
           <span class="file-cta">
@@ -40,8 +40,8 @@
     </div>
 
     <!-- Displaying upload status -->
-    <div v-if="isUploading" class="notification is-info">
-      Uploading...
+    <div v-if="isUploading" class="loading-container">
+      <img src="@/assets/loading-animation.gif" alt="Loading..." />
     </div>
 
   </div>
@@ -64,7 +64,7 @@ export default {
       selectedItem: null,  // Initialized to null
       path: mdiTextBoxSearchOutline,
       fileName: 'No file chosen',
-      isUploading: false
+      isUploading: false,
     };
   },
 
