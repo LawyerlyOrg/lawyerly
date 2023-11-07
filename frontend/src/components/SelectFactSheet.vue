@@ -40,8 +40,8 @@
     </div>
 
     <!-- Displaying upload status -->
-    <div v-if="isUploading" class="loading-container">
-      <img src="@/assets/loading-animation.gif" alt="Loading..." />
+    <div v-if="isUploading">
+      Loading...
     </div>
 
   </div>
