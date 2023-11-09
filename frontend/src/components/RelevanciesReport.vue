@@ -21,7 +21,7 @@
         <thead >
           <tr>
             <th>Case</th>
-            <th>Relevancy</th>
+            <th>Report</th>
           </tr>
         </thead>
         <tbody>
