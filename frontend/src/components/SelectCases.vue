@@ -93,7 +93,7 @@ export default {
     fetchCases() {
       axios
         .get(
-          "https://lawyerlyservice.uw.r.appspot.com/collection/6536eeb20c27a16e16d0ad92/cases"
+          "https://lawyerlyservice.uw.r.appspot.com/collection/6552b0e463c7a4a12cdec1c6/cases"
         )
         .then((response) => {
           this.cases = response.data;

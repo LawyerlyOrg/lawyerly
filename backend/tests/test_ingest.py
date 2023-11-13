@@ -34,11 +34,6 @@ def law_area():
     return law_area
 
 @pytest.fixture
-def index_name():
-    index_name = "test4"
-    return index_name
-
-@pytest.fixture
 def collection_name():
     collection_name = "Casandra's Case"
     return collection_name

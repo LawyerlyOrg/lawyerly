@@ -47,7 +47,6 @@
   </div>
 </template>
 
-
 <script>
 import axios from "axios";
 import SvgIcon from "@jamescoyle/vue-icon";
@@ -76,7 +75,7 @@ export default {
     fetchFactSheets() {
       axios
       .get(
-        "https://lawyerlyservice.uw.r.appspot.com/collection/6536eeb20c27a16e16d0ad92/factsheets"
+        "https://lawyerlyservice.uw.r.appspot.com/collection/6552b0e463c7a4a12cdec1c6/factsheets"
       )
       .then((response) => {
         this.items = response.data;
